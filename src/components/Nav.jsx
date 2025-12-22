@@ -7,12 +7,7 @@ import Icon from '@/components/Icon';
 import ThemeToggle from '@/components/Theme';
 
 const navigationItems = [
-  {
-    label: 'Dashboard',
-    path: '/dashboard',
-    icon: 'HomeIcon',
-    tooltip: 'View your fitness overview',
-  },
+ 
   {
     label: 'Workout Plans',
     path: '/workoutPlanDetails',
