@@ -1,220 +1,107 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
 
-@layer base {
+:root {
+  --radius: 0.625rem;
+
+  --background: #ffffff;
+  --foreground: #030712;
+
+  --card: #ffffff;
+  --card-foreground: #030712;
+
+  --popover: #ffffff;
+  --popover-foreground: #030712;
+
+  --primary: #101828;
+  --primary-foreground: #f9fafb;
+
+  --secondary: #f3f4f6;
+  --secondary-foreground: #101828;
+
+  --muted: #f3f4f6;
+  --muted-foreground: #6a7282;
+
+  --accent: #f3f4f6;
+  --accent-foreground: #101828;
+
+  --destructive: #e40014;
+  --destructive-foreground: #f9fafb;
+
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #99a1af;
+
+  --shadow-sm: 0 2px 4px #0000000f;
+  --shadow-md: 0 4px 8px #00000014;
+  --shadow-lg: 0 8px 16px #0000001a;
+  --shadow-xl: 0 16px 32px #0000001f;
+  --shadow-2xl: 0 32px 64px -12px #00000024;
+}
+
+@supports (color: lab(0% 0 0)) {
   :root {
-    /* Primary Colors */
-    --color-primary: #0D7377; /* teal-700 */
-    --color-primary-foreground: #FFFFFF; /* white */
-    
-    /* Secondary Colors */
-    --color-secondary: #14A085; /* teal-500 */
-    --color-secondary-foreground: #FFFFFF; /* white */
-    
-    /* Accent Colors */
-    --color-accent: #FF6B6B; /* coral-500 */
-    --color-accent-foreground: #FFFFFF; /* white */
-    
-    /* Background Colors */
-    --color-background: #FAFBFC; /* gray-50 */
-    --color-foreground: #1A202C; /* gray-900 */
-    
-    /* Surface Colors */
-    --color-card: #FFFFFF; /* white */
-    --color-card-foreground: #2D3748; /* gray-700 */
-    
-    /* Popover Colors */
-    --color-popover: #FFFFFF; /* white */
-    --color-popover-foreground: #2D3748; /* gray-700 */
-    
-    /* Muted Colors */
-    --color-muted: #F7FAFC; /* gray-100 */
-    --color-muted-foreground: #4A5568; /* gray-600 */
-    
-    /* Border & Input */
-    --color-border: rgba(13, 115, 119, 0.15); /* primary with opacity */
-    --color-input: #E2E8F0; /* gray-200 */
-    --color-ring: #0D7377; /* teal-700 */
-    
-    /* Status Colors */
-    --color-success: #38A169; /* green-600 */
-    --color-success-foreground: #FFFFFF; /* white */
-    
-    --color-warning: #D69E2E; /* yellow-600 */
-    --color-warning-foreground: #FFFFFF; /* white */
-    
-    --color-error: #E53E3E; /* red-600 */
-    --color-error-foreground: #FFFFFF; /* white */
-    
-    --color-destructive: #E53E3E; /* red-600 */
-    --color-destructive-foreground: #FFFFFF; /* white */
-    
-    /* Radius */
-    --radius-sm: 6px;
-    --radius-md: 12px;
-    --radius-lg: 18px;
-    --radius-xl: 24px;
-    
-    /* Shadows */
-    --shadow-sm: 0 2px 4px rgba(13, 115, 119, 0.12);
-    --shadow-md: 0 4px 8px rgba(13, 115, 119, 0.15);
-    --shadow-lg: 0 8px 16px rgba(13, 115, 119, 0.18);
-    --shadow-xl: 0 16px 32px rgba(13, 115, 119, 0.21);
-    --shadow-2xl: 0 32px 64px -12px rgba(13, 115, 119, 0.24);
-  }
-
-  .dark {
-    /* Primary Colors */
-    --color-primary: #14A085; /* teal-500 */
-    --color-primary-foreground: #FFFFFF; /* white */
-    
-    /* Secondary Colors */
-    --color-secondary: #0D7377; /* teal-700 */
-    --color-secondary-foreground: #FFFFFF; /* white */
-    
-    /* Accent Colors */
-    --color-accent: #FF8787; /* coral-400 */
-    --color-accent-foreground: #FFFFFF; /* white */
-    
-    /* Background Colors */
-    --color-background: #0F1419; /* gray-950 */
-    --color-foreground: #EBF0F5; /* gray-100 */
-    
-    /* Surface Colors */
-    --color-card: #1A2332; /* gray-900 */
-    --color-card-foreground: #E2E8F0; /* gray-200 */
-    
-    /* Popover Colors */
-    --color-popover: #1A2332; /* gray-900 */
-    --color-popover-foreground: #E2E8F0; /* gray-200 */
-    
-    /* Muted Colors */
-    --color-muted: #2D3748; /* gray-800 */
-    --color-muted-foreground: #A0AEC0; /* gray-400 */
-    
-    /* Border & Input */
-    --color-border: rgba(20, 160, 133, 0.2); /* secondary with opacity */
-    --color-input: #2D3748; /* gray-800 */
-    --color-ring: #14A085; /* teal-500 */
-    
-    /* Status Colors */
-    --color-success: #48BB78; /* green-500 */
-    --color-success-foreground: #FFFFFF; /* white */
-    
-    --color-warning: #ECC94B; /* yellow-500 */
-    --color-warning-foreground: #1A202C; /* gray-900 */
-    
-    --color-error: #FC8181; /* red-400 */
-    --color-error-foreground: #FFFFFF; /* white */
-    
-    --color-destructive: #FC8181; /* red-400 */
-    --color-destructive-foreground: #FFFFFF; /* white */
-    
-    /* Shadows - Glow effects for dark mode */
-    --shadow-sm: 0 2px 4px rgba(20, 160, 133, 0.1);
-    --shadow-md: 0 4px 8px rgba(20, 160, 133, 0.12);
-    --shadow-lg: 0 8px 16px rgba(20, 160, 133, 0.15);
-    --shadow-xl: 0 16px 32px rgba(20, 160, 133, 0.18);
-    --shadow-2xl: 0 32px 64px -12px rgba(20, 160, 133, 0.2);
-  }
-
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-    font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 16px;
-    line-height: 1.65;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-
-  h1 {
-    font-size: 2.75rem;
-    line-height: 1.1;
-    font-weight: 700;
-  }
-
-  h2 {
-    font-size: 2.25rem;
-    line-height: 1.2;
-    font-weight: 600;
-  }
-
-  h3 {
-    font-size: 1.75rem;
-    line-height: 1.25;
-    font-weight: 600;
-  }
-
-  h4 {
-    font-size: 1.375rem;
-    line-height: 1.3;
-    font-weight: 500;
-  }
-
-  h5 {
-    font-size: 1.125rem;
-    line-height: 1.4;
-    font-weight: 500;
-  }
-
-  @media (max-width: 768px) {
-    body {
-      font-size: 15px;
-    }
+    --background: lab(100% 0 0);
+    --foreground: lab(1.9% .27 -5.4);
+    --border: lab(91.6% -.15 -2.2);
+    --ring: lab(65.9% -.83 -8.1);
   }
 }
 
-@layer utilities {
-  .text-caption {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 0.875rem;
-    line-height: 1.45;
-    letter-spacing: -0.01em;
-  }
+:root.dark {
+  --background: #030712;
+  --foreground: #f9fafb;
 
-  .text-data {
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
-    font-feature-settings: 'tnum' on, 'lnum' on;
-  }
+  --card: #101828;
+  --card-foreground: #f9fafb;
 
-  .transition-smooth {
-    transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  }
+  --popover: #101828;
+  --popover-foreground: #f9fafb;
 
-  .transition-spring {
-    transition: all 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
+  --primary: #e5e7eb;
+  --primary-foreground: #101828;
 
-  .shadow-warm-sm {
-    box-shadow: var(--shadow-sm);
-  }
+  --secondary: #1e2939;
+  --secondary-foreground: #f9fafb;
 
-  .shadow-warm-md {
-    box-shadow: var(--shadow-md);
-  }
+  --muted: #1e2939;
+  --muted-foreground: #99a1af;
 
-  .shadow-warm-lg {
-    box-shadow: var(--shadow-lg);
-  }
+  --accent: #1e2939;
+  --accent-foreground: #f9fafb;
 
-  .shadow-warm-xl {
-    box-shadow: var(--shadow-xl);
-  }
+  --destructive: #ff6568;
+  --destructive-foreground: #f9fafb;
 
-  .shadow-warm-2xl {
-    box-shadow: var(--shadow-2xl);
+  --border: #ffffff1a;
+  --input: #ffffff26;
+  --ring: #6a7282;
+}
+
+@supports (color: lab(0% 0 0)) {
+  :root.dark {
+    --background: lab(1.9% .27 -5.4);
+    --foreground: lab(98.2% -.24 -.7);
+    --border: lab(100% 0 0 / .1);
+    --ring: lab(47.7% -.39 -10);
   }
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }

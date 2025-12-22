@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Icon from '@/components/Icon';
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState('light'); // 'light' | 'dark'
+  const [theme, setTheme] = useState('light'); 
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function ThemeToggle() {
     setTheme(initialTheme);
     document.documentElement.classList.toggle(
       'dark',
-      initialTheme === 'dark'
+
     );
   }, []);
 

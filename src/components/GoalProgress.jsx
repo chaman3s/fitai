@@ -45,15 +45,13 @@ export default function GoalProgress({
             Remaining
           </p>
           <p className="text-data text-2xl font-bold text-foreground">
-            {remaining}
+            {Number(remaining).toFixed(1)}
             <span className="text-sm font-normal text-muted-foreground ml-1">
               {unit}
             </span>
           </p>
         </div>
       </div>
-
-      {/* Progress Bar */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-caption text-xs font-medium text-muted-foreground">
