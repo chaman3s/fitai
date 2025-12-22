@@ -1,7 +1,9 @@
 import AdvancedOptionsPanel from "@/components/AdvancedOption";
+import CustomizationCard from "@/components/CustomizationCard";
 
 export default function GenerationPlan() {
 const [advancedSettings, setAdvancedSettings] = useState(advancedOptions);
+const [workoutDuration, setWorkoutDuration] = useState("45");
 const advancedOptions= [
   {
     id: "equipment",
@@ -127,6 +129,15 @@ const mockMealPlans = [
     );
   };
 return (
+    <>
 <AdvancedOptionsPanel options={advancedSettings} onUpdate={handleAdvancedOptionUpdate}/>
+<CustomizationCard
+              title="Workout Duration"
+              description="Choose your preferred workout session length"
+              options={workoutDurationOptions}
+              selectedValue={workoutDuration}
+              onSelect={setWorkoutDuration}
+              icon="ClockIcon" />
+    </>
 );    
 }
