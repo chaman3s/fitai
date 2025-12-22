@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Icon from '@/components/ui/Icon';
+import Icon from '@/components/Icon';
 
 export default function AdvancedOptionsPanel({ options, onUpdate }) {
   const [isExpanded, setIsExpanded] = useState(false);
