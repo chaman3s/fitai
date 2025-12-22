@@ -59,7 +59,7 @@ export default function Nav() {
         <div className="w-full mx-auto px-4">
           <div className="flex items-center justify-between h-20">
             <Link
-              href="/dashboard"
+              href="/"
               className="flex items-center gap-3 transition-smooth hover:opacity-80"
               aria-label="FitGenius AI Home"
             >
