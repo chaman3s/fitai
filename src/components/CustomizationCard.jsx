@@ -1,6 +1,6 @@
 'use client';
 
-import Icon from '@/components/ui/AppIcon';
+import Icon from '@/components/Icon';
 
 export default function CustomizationCard({
   title,
