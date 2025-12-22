@@ -155,8 +155,6 @@ export default function Nav() {
           })}
         </div>
       </nav>
-
-      {/* Spacers */}
       <div className="hidden md:block h-20" aria-hidden="true" />
       <div className="md:hidden h-16" aria-hidden="true" />
     </>
