@@ -1,45 +1,31 @@
 import Nav from "@/components/Nav";
 import "@/styles/globals.css";
 import { Outfit, Inter, JetBrains_Mono, Source_Sans_3 } from "next/font/google";
-
-const outfit = Outfit({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-outfit",
-});
-
-const sourceSans = Source_Sans_3({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-source-sans",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-inter",
-});
-
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-jetbrains",
-});
+import { AuthProvider } from "@/contexts/authContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import ClientOnly from "@/components/ClientOnly";
+import { ProfileProvider } from "@/contexts/profileContext";
 
 export default function App({ Component, pageProps }) {
+  const isPublic = Component.auth === false;
+
   return (
-    <div
-      className={`
-        ${sourceSans.variable}
-        ${outfit.variable}
-        ${inter.variable}
-        ${jetbrains.variable}
-      `}
-    >
+    <AuthProvider>
       <Nav />
+
       <main style={{ padding: "20px" }}>
-        <Component {...pageProps} />
+        {isPublic ? (
+          <Component {...pageProps} />
+        ) : (
+          <ClientOnly>
+            <ProtectedRoute>
+              <ProfileProvider>
+                <Component {...pageProps} />
+              </ProfileProvider>
+            </ProtectedRoute>
+          </ClientOnly>
+        )}
       </main>
-    </div>
+    </AuthProvider>
   );
 }

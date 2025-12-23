@@ -155,23 +155,23 @@ export default function PersonalInfoSection({
               {unitSystem === 'imperial' ? 'ft/in' : 'cm'}
             </button>
           </div>
+          
           {isEditing ? (
             <input
-              type="number"
-              value={editedInfo.height}
+              type="text"
+              placeholder={`e.g. 5'8 or 170cm`}
+              value={editedInfo.height || ''}
               onChange={(e) =>
                 setEditedInfo({
                   ...editedInfo,
-                  height: parseFloat(e.target.value) || 0,
+                  height: e.target.value, // ✅ STRING ONLY
                 })
               }
               className="w-full px-4 py-3 border rounded-lg"
             />
           ) : (
             <div className="px-4 py-3 bg-muted rounded-lg">
-              {unitSystem === 'imperial'
-                ? `${Math.floor(info.height / 12)}' ${(info.height % 12).toFixed(0)}"`
-                : `${(info.height * 2.54).toFixed(1)} cm`}
+              {info.height || 'Not set'}
             </div>
           )}
         </div>
@@ -179,25 +179,25 @@ export default function PersonalInfoSection({
         {/* Weight */}
         <div>
           <label className="block text-sm font-caption font-medium mb-2">
-            Weight ({unitSystem === 'imperial' ? 'lbs' : 'kg'})
+            Weight ({ 'kg'})
           </label>
           {isEditing ? (
             <input
               type="number"
+              step="0.1"          // ✅ THIS LINE
               value={editedInfo.weight}
               onChange={(e) =>
                 setEditedInfo({
                   ...editedInfo,
-                  weight: parseFloat(e.target.value) || 0,
+                  weight: parseFloat(e.target.value),
                 })
               }
               className="w-full px-4 py-3 border rounded-lg"
             />
           ) : (
             <div className="px-4 py-3 bg-muted rounded-lg">
-              {unitSystem === 'imperial'
-                ? `${info.weight} lbs`
-                : `${(info.weight * 0.453592).toFixed(1)} kg`}
+              {`${info.weight} kg`}
+                
             </div>
           )}
         </div>

@@ -102,7 +102,7 @@ export default function FitnessPreferencesSection({ preferences, onUpdate }) {
       <div className="space-y-6">
         <div>
           <label className="block text-sm font-medium mb-3">
-            Fitness Goal
+           Main Fitness Goal
           </label>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {goalOptions.map((option) => (

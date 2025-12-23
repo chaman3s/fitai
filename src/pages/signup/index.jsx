@@ -2,15 +2,32 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/authContext';
 
-export default function RegisterPage() {
+export default function SignupPage() {
   const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
+  const { register } = useAuth();
 
-  const handleSubmit = (e) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: API call
-    router.push('/login');
+    setLoading(true);
+    setError('');
+
+    try {
+      await register({ name, email, password });
+      router.replace('/userProfileSettings'); 
+    } catch (err) {
+      setError(err.message || 'Signup failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -23,59 +40,63 @@ export default function RegisterPage() {
           Start your fitness journey
         </p>
 
+        {error && (
+          <div className="mb-4 text-sm text-red-600 text-center">
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="text-sm font-medium">Full Name</label>
-            <input
-              type="text"
-              required
-              placeholder="John Doe"
-              className="w-full mt-1 px-4 py-2 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary outline-none"
-            />
-          </div>
+          <input
+            type="text"
+            required
+            placeholder="Full Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full px-4 py-2 rounded-lg border"
+          />
 
-          <div>
-            <label className="text-sm font-medium">Email</label>
-            <input
-              type="email"
-              required
-              placeholder="you@example.com"
-              className="w-full mt-1 px-4 py-2 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary outline-none"
-            />
-          </div>
+          <input
+            type="email"
+            required
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-4 py-2 rounded-lg border"
+          />
 
-          <div>
-            <label className="text-sm font-medium">Password</label>
-            <div className="relative mt-1">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                required
-                placeholder="••••••••"
-                className="w-full px-4 py-2 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary outline-none"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2.5 text-sm text-muted-foreground"
-              >
-                {showPassword ? 'Hide' : 'Show'}
-              </button>
-            </div>
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              required
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 rounded-lg border"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-2.5 text-sm"
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
           </div>
 
           <button
             type="submit"
-            className="w-full py-2.5 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition"
+            disabled={loading}
+            className="w-full py-2.5 bg-primary text-white rounded-lg"
           >
-            Create Account
+            {loading ? 'Creating Account…' : 'Create Account'}
           </button>
         </form>
 
-        <p className="text-sm text-center mt-6 text-muted-foreground">
+        <p className="text-sm text-center mt-6">
           Already have an account?{' '}
           <button
             onClick={() => router.push('/login')}
-            className="text-primary font-medium hover:underline"
+            className="text-primary"
           >
             Login
           </button>
@@ -84,3 +105,5 @@ export default function RegisterPage() {
     </div>
   );
 }
+
+SignupPage.auth = false;

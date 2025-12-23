@@ -2,14 +2,32 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/authContext';
 
-export default function LoginPage() {
+function LoginPage() {
   const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
+    const { login } = useAuth();
 
-  const handleSubmit = (e) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    router.push('/dashboard');
+    setError('');
+    setLoading(true);
+
+    try {
+      
+      await login ({ email, password });
+      router.replace('/');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -22,12 +40,20 @@ export default function LoginPage() {
           Login to your account
         </p>
 
+        {error && (
+          <div className="mb-4 text-sm text-red-600 text-center">
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="text-sm font-medium">Email</label>
             <input
               type="email"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               className="w-full mt-1 px-4 py-2 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary outline-none"
             />
@@ -39,6 +65,8 @@ export default function LoginPage() {
               <input
                 type={showPassword ? 'text' : 'password'}
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className="w-full px-4 py-2 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary outline-none"
               />
@@ -54,16 +82,17 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full py-2.5 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition"
+            disabled={loading}
+            className="w-full py-2.5 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition disabled:opacity-60"
           >
-            Login
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 
         <p className="text-sm text-center mt-6 text-muted-foreground">
           Don’t have an account?{' '}
           <button
-            onClick={() => router.push('/register')}
+            onClick={() => router.push('/signup')}
             className="text-primary font-medium hover:underline"
           >
             Sign up
@@ -73,3 +102,6 @@ export default function LoginPage() {
     </div>
   );
 }
+
+LoginPage.auth = false;
+export default LoginPage;

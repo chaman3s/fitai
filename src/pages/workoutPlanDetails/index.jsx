@@ -7,7 +7,6 @@ import WorkoutStats from '@/components/WorkoutStats';
 import AudioPlayer from '@/components/AudioPlayer';
 import PlanActions from '@/components/PlanAction';
 import MotivationalQuote from '@/components/MotivationalQuote';
-import Icon from '@/components/Icon';
 
 const mockWorkoutPlan = [
   {

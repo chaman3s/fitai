@@ -5,97 +5,146 @@ import PersonalInfoSection from '@/components/PersonalInfoSection';
 import FitnessPreferencesSection from '@/components/FitnessPreferences';
 import DietaryPreferencesSection from '@/components/DietaryPreferences';
 import HealthInfoSection from '@/components/HealthInfoSection';
-import AccountSecuritySection from '@/components/AccountSecurity';
-
 
 export default function ProfileSettings() {
-  const [isHydrated, setIsHydrated] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [unitSystem, setUnitSystem] = useState('imperial');
 
-  const [personalInfo, setPersonalInfo] = useState({
-    name: 'Alex Johnson',
-    age: 28,
-    gender: 'Male',
-    height: 70,
-    weight: 175
-  });
+  const [personalInfo, setPersonalInfo] = useState(null);
+  const [fitnessPreferences, setFitnessPreferences] = useState(null);
+  const [dietaryPreferences, setDietaryPreferences] = useState(null);
+  const [healthInfo, setHealthInfo] = useState(null);
 
-  const [fitnessPreferences, setFitnessPreferences] = useState({
-    goal: 'muscle_gain',
-    fitnessLevel: 'intermediate',
-    location: 'gym',
-    equipment: ['Dumbbells', 'Barbell', 'Pull-up Bar']
-  });
-
-  const [dietaryPreferences, setDietaryPreferences] = useState({
-    type: 'non_vegetarian',
-    allergies: ['Peanuts'],
-    restrictions: ['Low Sugar', 'High Protein'],
-    mealFrequency: 5
-  });
-
-  const [healthInfo, setHealthInfo] = useState({
-    medicalHistory:
-      'Previous knee injury in 2020, fully recovered. No current medical conditions.',
-    stressLevel: 3,
-    sleepHours: 7.5,
-    waterIntake: 3
-  });
-
+  // ---------------- FETCH PROFILE DATA ----------------
   useEffect(() => {
-    setIsHydrated(true);
-    const savedUnitSystem = localStorage.getItem('unitSystem');
-    if (savedUnitSystem) {
-      setUnitSystem(savedUnitSystem);
+    async function fetchProfile() {
+      try {
+        setLoading(true);
+
+        const [profileRes, healthRes] = await Promise.all([
+          fetch('/api/profile', { credentials: 'include' }),
+          fetch('/api/healthProfile', { credentials: 'include' }),
+        ]);
+
+        const profile = await profileRes.json();
+        const health = await healthRes.json();
+
+        // ----- MAP BACKEND → UI SHAPE -----
+        setPersonalInfo({
+          name: profile.name,
+          age: profile.age,
+          gender: profile.gender,
+          height: profile.height,
+          weight: profile.weight,
+        });
+
+        setFitnessPreferences({
+          goal: profile.fitnessGoals,
+          fitnessLevel: profile.fitnessLavel,
+          location: profile.preferredWorkoutLocation,
+          equipment: profile.availableEquipment || [],
+        });
+
+        setDietaryPreferences({
+          type: profile.dietType,
+          allergies: profile.foodAllergies || [],
+          restrictions: profile.dietaryRestrictions || [],
+          mealFrequency: profile.MealFrequency,
+        });
+
+        setHealthInfo({
+          stressLevel: health.currentStressLevel,
+          sleepHours: health.averageSleepHours,
+          waterIntake: health.dailyWaterIntake,
+          isPrivate: health.isPrivate,
+        });
+      } catch (err) {
+        console.error('Profile load failed', err);
+      } finally {
+        setLoading(false);
+      }
     }
+
+    fetchProfile();
   }, []);
 
-  const handlePersonalInfoUpdate = (info) => {
+  // ---------------- UPDATE HANDLERS ----------------
+  const handlePersonalInfoUpdate = async (info) => {
     setPersonalInfo(info);
-    localStorage.setItem('personalInfo', JSON.stringify(info));
+
+    await fetch('/api/profile', {
+      method: 'PUT',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(info),
+    });
   };
 
-  const handleUnitToggle = () => {
-    const newSystem = unitSystem === 'imperial' ? 'metric' : 'imperial';
-    setUnitSystem(newSystem);
-    localStorage.setItem('unitSystem', newSystem);
-  };
-
-  const handleFitnessPreferencesUpdate = (preferences) => {
+  const handleFitnessPreferencesUpdate = async (preferences) => {
     setFitnessPreferences(preferences);
-    localStorage.setItem('fitnessPreferences', JSON.stringify(preferences));
+
+    await fetch('/api/profile', {
+      method: 'PUT',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fitnessGoals: preferences.goal,
+        fitnessLavel: preferences.fitnessLevel,
+        preferredWorkoutLocation: preferences.location,
+        availableEquipment: preferences.equipment,
+      }),
+    });
   };
 
-  const handleDietaryPreferencesUpdate = (preferences) => {
+  const handleDietaryPreferencesUpdate = async (preferences) => {
     setDietaryPreferences(preferences);
-    localStorage.setItem('dietaryPreferences', JSON.stringify(preferences));
+
+    await fetch('/api/profile', {
+      method: 'PUT',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        dietType: preferences.type,
+        foodAllergies: preferences.allergies,
+        dietaryRestrictions: preferences.restrictions,
+        MealFrequency: preferences.mealFrequency,
+      }),
+    });
   };
 
-  const handleHealthInfoUpdate = (info) => {
+  const handleHealthInfoUpdate = async (info) => {
     setHealthInfo(info);
-    localStorage.setItem('healthInfo', JSON.stringify(info));
+    console.log("level", info.stressLevel);
+    await fetch('/api/healthProfile', {
+      method: 'PUT',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        currentStressLevel: info.stressLevel,
+        averageSleepHours: info.sleepHours,
+        dailyWaterIntake: info.waterIntake,
+        isPrivate: info.isPrivate,
+      }),
+    });
   };
 
-  if (!isHydrated) {
+  // ---------------- LOADING UI ----------------
+  if (loading || !personalInfo) {
     return (
-      <div className="min-h-screen bg-background">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="animate-pulse space-y-6">
-            <div className="h-32 bg-muted rounded-xl" />
-            <div className="h-96 bg-muted rounded-xl" />
-            <div className="h-96 bg-muted rounded-xl" />
-          </div>
-        </div>
+      <div className="min-h-screen bg-background p-8 animate-pulse">
+        <div className="h-32 bg-muted rounded-xl mb-6" />
+        <div className="h-96 bg-muted rounded-xl mb-6" />
+        <div className="h-96 bg-muted rounded-xl" />
       </div>
     );
   }
 
+  // ---------------- UI ----------------
   return (
     <div className="min-h-screen bg-background pb-24 md:pb-8">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
             Profile Settings
           </h1>
           <p className="text-muted-foreground">
@@ -103,13 +152,11 @@ export default function ProfileSettings() {
           </p>
         </div>
 
-        {/* Sections */}
         <div className="space-y-6">
           <PersonalInfoSection
             info={personalInfo}
             unitSystem={unitSystem}
             onUpdate={handlePersonalInfoUpdate}
-            onUnitToggle={handleUnitToggle}
           />
 
           <FitnessPreferencesSection
@@ -126,10 +173,6 @@ export default function ProfileSettings() {
             info={healthInfo}
             onUpdate={handleHealthInfoUpdate}
           />
-
-          
-
-         
         </div>
       </div>
     </div>

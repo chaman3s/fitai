@@ -4,11 +4,12 @@ import { useState } from 'react';
 import Icon from '@/components/Icon';
 
 const stressLevels = [
-  { value: 1, label: 'Very Low', color: 'text-success' },
-  { value: 2, label: 'Low', color: 'text-success' },
-  { value: 3, label: 'Moderate', color: 'text-warning' },
-  { value: 4, label: 'High', color: 'text-error' },
-  { value: 5, label: 'Very High', color: 'text-error' }
+  { value: "no stress", label: "No Stress", color: "text-success" },
+  { value: "very low", label: "Very Low", color: "text-success" },
+  { value: "low", label: "Low", color: "text-success" },
+  { value: "moderate", label: "Moderate", color: "text-warning" },
+  { value: "high", label: "High", color: "text-error" },
+  { value: "very high", label: "Very High", color: "text-error" },
 ];
 
 export default function HealthInfoSection({ info, onUpdate }) {
@@ -115,19 +116,21 @@ export default function HealthInfoSection({ info, onUpdate }) {
 
           {isEditing ? (
             <>
-              <input
-                type="range"
-                min="1"
-                max="5"
-                value={editedInfo.stressLevel}
-                onChange={(e) =>
-                  setEditedInfo({
-                    ...editedInfo,
-                    stressLevel: Number(e.target.value)
-                  })
-                }
-                className="w-full accent-primary"
-              />
+             <input
+              type="range"
+              min="0"
+              max={stressLevels.length - 1}
+              value={stressLevels.findIndex(
+              (l) => l.value === editedInfo.stressLevel
+    )}
+  onChange={(e) =>
+    setEditedInfo({
+      ...editedInfo,
+      stressLevel: stressLevels[Number(e.target.value)].value, // ✅ STRING
+    })
+  }
+  className="w-full accent-primary"
+/>
               <div className="flex justify-between mt-2">
                 {stressLevels.map((level) => (
                   <span
@@ -153,8 +156,6 @@ export default function HealthInfoSection({ info, onUpdate }) {
             </div>
           )}
         </div>
-
-        {/* Sleep Hours */}
         <div>
           <label className="block text-sm font-caption font-medium text-foreground mb-3">
             Average Sleep Hours
@@ -163,6 +164,9 @@ export default function HealthInfoSection({ info, onUpdate }) {
           {isEditing ? (
             <input
               type="number"
+               step="0.5"         
+               min="0"
+              max="24"
               value={editedInfo.sleepHours}
               onChange={(e) =>
                 setEditedInfo({
