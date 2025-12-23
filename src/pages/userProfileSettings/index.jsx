@@ -15,7 +15,7 @@ export default function ProfileSettings() {
   const [dietaryPreferences, setDietaryPreferences] = useState(null);
   const [healthInfo, setHealthInfo] = useState(null);
 
-  // ---------------- FETCH PROFILE DATA ----------------
+
   useEffect(() => {
     async function fetchProfile() {
       try {
@@ -138,8 +138,6 @@ export default function ProfileSettings() {
       </div>
     );
   }
-
-  // ---------------- UI ----------------
   return (
     <div className="min-h-screen bg-background pb-24 md:pb-8">
       <div className="max-w-7xl mx-auto px-4 py-8">

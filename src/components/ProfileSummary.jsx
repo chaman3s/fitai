@@ -1,6 +1,7 @@
 import Icon from '@/components/Icon';
 
 export default function ProfileSummaryCard({ profile, onEdit }) {
+  console.log('Profile data in ProfileSummaryCard:', profile);
   return (
     <div className="bg-card rounded-xl shadow-warm-md p-6 border border-border">
       <div className="flex items-start justify-between mb-6">
@@ -29,7 +30,7 @@ export default function ProfileSummaryCard({ profile, onEdit }) {
           </div>
           <div>
             <p className="text-caption text-muted-foreground text-sm">Name</p>
-            <p className="text-foreground font-medium">{profile.name}</p>
+            <p className="text-foreground font-medium">{profile.name || 'N/A'}</p>
           </div>
         </div>
 
@@ -63,7 +64,7 @@ export default function ProfileSummaryCard({ profile, onEdit }) {
           </div>
           <div>
             <p className="text-caption text-muted-foreground text-sm">Fitness Goal</p>
-            <p className="text-foreground font-medium">{profile.fitnessGoal}</p>
+            <p className="text-foreground font-medium">{profile.fitnessGoals}</p>
           </div>
         </div>
 
@@ -73,7 +74,7 @@ export default function ProfileSummaryCard({ profile, onEdit }) {
           </div>
           <div>
             <p className="text-caption text-muted-foreground text-sm">Fitness Level</p>
-            <p className="text-foreground font-medium">{profile.fitnessLevel}</p>
+            <p className="text-foreground font-medium">{profile.fitnessLavel}</p>
           </div>
         </div>
 
@@ -83,7 +84,7 @@ export default function ProfileSummaryCard({ profile, onEdit }) {
           </div>
           <div>
             <p className="text-caption text-muted-foreground text-sm">Workout Location</p>
-            <p className="text-foreground font-medium">{profile.workoutLocation}</p>
+            <p className="text-foreground font-medium">{profile.preferredWorkoutLocation}</p>
           </div>
         </div>
 
@@ -92,8 +93,8 @@ export default function ProfileSummaryCard({ profile, onEdit }) {
             <Icon name="HeartIcon" variant="outline" size={20} className="text-secondary" />
           </div>
           <div>
-            <p className="text-caption text-muted-foreground text-sm">Dietary Preference</p>
-            <p className="text-foreground font-medium">{profile.dietaryPreference}</p>
+            <p className="text-caption text-muted-foreground text-sm">Diet Type</p>
+            <p className="text-foreground font-medium">{profile.dietType}</p>
           </div>
         </div>
       </div>

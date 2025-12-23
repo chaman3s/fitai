@@ -58,6 +58,16 @@ const UserSchema = new mongoose.Schema(
   MealFrequency: {
     type: Number,
 },
+bodyFat:{
+    type: String,
+},
+currentLeanMass:{
+   type: String,
+},
+oldLeanMass:{
+    type: String,
+    default: 0,
+},
 themePreference: {
     type: String,
     enum: ['light', 'dark',],

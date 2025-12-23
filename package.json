@@ -19,6 +19,7 @@
     "lucide-react": "^0.562.0",
     "mongoose": "^8.20.4",
     "next": "16.1.0",
+    "node-fetch": "^3.3.2",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "shadcn": "^3.6.2",

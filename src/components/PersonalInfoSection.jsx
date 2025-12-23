@@ -24,6 +24,7 @@ export default function PersonalInfoSection({
 
   return (
     <div className="bg-card rounded-xl shadow-warm-md p-6">
+      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-lg">
@@ -47,65 +48,61 @@ export default function PersonalInfoSection({
         {!isEditing ? (
           <button
             onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-caption font-medium transition-smooth hover:bg-primary/90 focus:outline-none focus:ring-3 focus:ring-primary focus:ring-offset-2"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
           >
             <Icon name="PencilIcon" variant="outline" size={18} />
-            <span>Edit</span>
+            Edit
           </button>
         ) : (
-          <div className="flex items-center gap-2">
+          <div className="flex gap-2">
             <button
               onClick={handleCancel}
-              className="px-4 py-2 bg-muted text-foreground rounded-lg font-caption font-medium transition-smooth hover:bg-muted/80"
+              className="px-4 py-2 bg-muted rounded-lg hover:bg-muted/80"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
-              className="flex items-center gap-2 px-4 py-2 bg-success text-success-foreground rounded-lg font-caption font-medium transition-smooth hover:bg-success/90"
+              className="flex items-center gap-2 px-4 py-2 bg-success text-success-foreground rounded-lg hover:bg-success/90"
             >
               <Icon name="CheckIcon" variant="outline" size={18} />
-              <span>Save</span>
+              Save
             </button>
           </div>
         )}
       </div>
 
+      {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Name */}
         <div>
-          <label className="block text-sm font-caption font-medium mb-2">
-            Full Name
-          </label>
+          <label className="block text-sm font-medium mb-2">Full Name</label>
           {isEditing ? (
             <input
               type="text"
-              value={editedInfo.name}
+              value={editedInfo.name || ''}
               onChange={(e) =>
                 setEditedInfo({ ...editedInfo, name: e.target.value })
               }
               className="w-full px-4 py-3 border rounded-lg"
             />
           ) : (
-            <div className="px-4 py-3 bg-muted rounded-lg">
-              {info.name}
-            </div>
+            <div className="px-4 py-3 bg-muted rounded-lg">{info.name}</div>
           )}
         </div>
 
         {/* Age */}
         <div>
-          <label className="block text-sm font-caption font-medium mb-2">
-            Age
-          </label>
+          <label className="block text-sm font-medium mb-2">Age</label>
           {isEditing ? (
             <input
               type="number"
-              value={editedInfo.age}
+              min="0"
+              value={editedInfo.age ?? ''}
               onChange={(e) =>
                 setEditedInfo({
                   ...editedInfo,
-                  age: parseInt(e.target.value) || 0,
+                  age: e.target.value === '' ? '' : Number(e.target.value),
                 })
               }
               className="w-full px-4 py-3 border rounded-lg"
@@ -119,53 +116,36 @@ export default function PersonalInfoSection({
 
         {/* Gender */}
         <div>
-          <label className="block text-sm font-caption font-medium mb-2">
-            Gender
-          </label>
+          <label className="block text-sm font-medium mb-2">Gender</label>
           {isEditing ? (
             <select
-              value={editedInfo.gender}
+              value={editedInfo.gender || ''}
               onChange={(e) =>
                 setEditedInfo({ ...editedInfo, gender: e.target.value })
               }
               className="w-full px-4 py-3 border rounded-lg"
             >
+              <option value="">Select</option>
               <option>Male</option>
               <option>Female</option>
               <option>Other</option>
               <option>Prefer not to say</option>
             </select>
           ) : (
-            <div className="px-4 py-3 bg-muted rounded-lg">
-              {info.gender}
-            </div>
+            <div className="px-4 py-3 bg-muted rounded-lg">{info.gender}</div>
           )}
         </div>
 
-        {/* Height */}
+        {/* Height (STRING) */}
         <div>
-          <div className="flex justify-between mb-2">
-            <label className="text-sm font-caption font-medium">
-              Height
-            </label>
-            <button
-              onClick={onUnitToggle}
-              className="text-xs text-primary"
-            >
-              {unitSystem === 'imperial' ? 'ft/in' : 'cm'}
-            </button>
-          </div>
-          
+          <label className="block text-sm font-medium mb-2">Height</label>
           {isEditing ? (
             <input
               type="text"
-              placeholder={`e.g. 5'8 or 170cm`}
+              placeholder="e.g. 5'8 or 170cm"
               value={editedInfo.height || ''}
               onChange={(e) =>
-                setEditedInfo({
-                  ...editedInfo,
-                  height: e.target.value, // ✅ STRING ONLY
-                })
+                setEditedInfo({ ...editedInfo, height: e.target.value })
               }
               className="w-full px-4 py-3 border rounded-lg"
             />
@@ -178,26 +158,55 @@ export default function PersonalInfoSection({
 
         {/* Weight */}
         <div>
-          <label className="block text-sm font-caption font-medium mb-2">
-            Weight ({ 'kg'})
-          </label>
+          <label className="block text-sm font-medium mb-2">Weight (kg)</label>
           {isEditing ? (
             <input
               type="number"
-              step="0.1"          // ✅ THIS LINE
-              value={editedInfo.weight}
+              step="0.1"
+              min="0"
+              value={editedInfo.weight ?? ''}
               onChange={(e) =>
                 setEditedInfo({
                   ...editedInfo,
-                  weight: parseFloat(e.target.value),
+                  weight:
+                    e.target.value === '' ? '' : Number(e.target.value),
                 })
               }
               className="w-full px-4 py-3 border rounded-lg"
             />
           ) : (
             <div className="px-4 py-3 bg-muted rounded-lg">
-              {`${info.weight} kg`}
-                
+              {info.weight} kg
+            </div>
+          )}
+        </div>
+
+        {/* Body Fat */}
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            Body Fat (%)
+          </label>
+          {isEditing ? (
+            <input
+              type="number"
+              step="0.1"
+              min="0"
+              max="60"
+              value={editedInfo.bodyFat ?? ''}
+              onChange={(e) =>
+                setEditedInfo({
+                  ...editedInfo,
+                  bodyFat:
+                    e.target.value === '' ? '' : Number(e.target.value),
+                  oldLeanMass: editedInfo.currentLeanMass,
+                  currentLeanMass: editedInfo.weight - (editedInfo.weight * (Number(e.target.value) / 100)),
+                })
+              }
+              className="w-full px-4 py-3 border rounded-lg"
+            />
+          ) : (
+            <div className="px-4 py-3 bg-muted rounded-lg">
+              {info.bodyFat ? `${info.bodyFat} %` : 'Not set'}
             </div>
           )}
         </div>

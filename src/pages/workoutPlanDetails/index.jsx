@@ -98,7 +98,7 @@ const mockQuote = {
   author: 'Unknown'
 };
 
-export default function WorkoutPlanInteractive() {
+export default function WorkoutPlan() {
   const router = useRouter();
   const [expandedDay, setExpandedDay] = useState(1);
   const [completedExercises, setCompletedExercises] = useState(new Set());

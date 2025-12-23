@@ -8,9 +8,11 @@ import ActivitySummary from '@/components/ActivitySummary';
 import UpcomingWorkouts from '@/components/UpcomingWorkouts';
 import QuickActions from '@/components/QuickActions';
 import AITipsMotivation from '@/components/AITipsMotivation';
+import { useProfile } from "@/contexts/profileContext";
 
 export default function Home() {
   // 🔹 API DATA STATE
+  const { user } = useProfile();
   const [activities, setActivities] = useState([]);
   const [upcomingWorkouts, setUpcomingWorkouts] = useState([]);
 
@@ -62,8 +64,6 @@ export default function Home() {
 
     fetchWorkouts();
   }, [isHydrated]);
-
-  // 🔔 UI HANDLERS (unchanged)
   const handlePlayAudio = (type) => {
     setNotification(`Playing ${type} audio narration...`);
     setTimeout(() => setNotification(null), 3000);
@@ -156,7 +156,7 @@ export default function Home() {
               description="Nutritionally balanced meal plan."
               todayHighlight="High Protein Day"
               progress={72}
-              imageUrl="https://images.pixabay.com/photo/2017/10/09/19/29/eat-2834549_1280.jpg"
+              imageUrl="https://images.pexels.com/photos/416809/pexels-photo-416809.jpeg"
               detailsPath="/diet-plan-details"
               onPlayAudio={() => handlePlayAudio('Diet Plan')}
               onExportPDF={() => handleExportPDF('Diet Plan')}
@@ -166,9 +166,9 @@ export default function Home() {
 
           {/* 🔹 Goals */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <GoalProgress goalType="Weight Loss" currentValue={8.5} targetValue={15} unit="kg" icon="⚖️" />
-            <GoalProgress goalType="Muscle Gain" currentValue={3.2} targetValue={5} unit="kg" icon="💪" />
-            <GoalProgress goalType="Body Fat" currentValue={4.5} targetValue={8} unit="%" icon="📉" />
+            <GoalProgress goalType="Weight" currentValue={user?.weight} targetValue={15} unit="kg" icon="⚖️" />
+            <GoalProgress goalType="Muscle Gain"  currentValue={(user?.currentLeanMass - user?.oldLeanMass).toFixed(2)} targetValue={5} unit="kg" icon="💪" />
+            <GoalProgress goalType="Body Fat" currentValue={user?.bodyFat} targetValue={8} unit="%" icon="📉" />
           </div>
 
           {/* 🔹 API DATA */}

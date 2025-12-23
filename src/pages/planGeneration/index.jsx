@@ -8,18 +8,8 @@ import GenerationProgress from '@/components/GenerationProgress';
 import PlanPreviewCard from '@/components/PlanPreview';
 import ErrorMessage from '@/components/ErrorMessage';
 import Icon from '@/components/Icon';
+import { useProfile } from "@/contexts/profileContext";
 
-const mockProfile = {
-  name: 'Sarah Johnson',
-  age: 28,
-  gender: 'Female',
-  height: "5'6\"",
-  weight: '145 lbs',
-  fitnessGoal: 'Weight Loss',
-  fitnessLevel: 'Intermediate',
-  workoutLocation: 'Gym',
-  dietaryPreference: 'Vegetarian'
-};
 
 const workoutDurationOptions = [
   {
@@ -244,6 +234,7 @@ const mockMealPlans = [
 ];
 
 export default function GenerationPlan() {
+  const { user } = useProfile();
   const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
   const [workoutDuration, setWorkoutDuration] = useState('45');
@@ -255,7 +246,8 @@ export default function GenerationPlan() {
   const [currentStages, setCurrentStages] = useState(generationStages);
   const [currentTipIndex, setCurrentTipIndex] = useState(0);
   const [showPreview, setShowPreview] = useState(false);
-
+  const [workoutPlan, setWorkoutPlan] = useState(null);
+  const [mealPlan, setMealPlan] = useState(null);
   useEffect(() => {
     setIsHydrated(true);
   }, []);
@@ -267,7 +259,7 @@ export default function GenerationPlan() {
   };
 
   const handleEditProfile = () => {
-    router.push('/user-profile-settings');
+    router.push('/userProfileSettings');
   };
 
   const simulateGeneration = () => {
@@ -308,9 +300,36 @@ export default function GenerationPlan() {
     };
   };
 
-  const handleGeneratePlans = () => {
-    simulateGeneration();
-  };
+const handleGeneratePlans = async () => {
+  setIsGenerating(true);
+
+  const res = await fetch("/api/planGeneration", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userId: user._id,
+      profile: user,
+      workoutDuration,
+      mealComplexity,
+      focusArea,
+      advancedSettings,
+    }),
+  });
+
+  const data = await res.json();
+
+  if (!data.success) {
+    setGenerationError("Plan generation failed");
+    setIsGenerating(false);
+    return;
+  }
+
+  setWorkoutPlan(data.workoutPlan);
+  setMealPlan(data.dietPlan);
+  setShowPreview(true);
+  setIsGenerating(false);
+};
+
 
   const handleRetry = () => {
     setGenerationError(null);
@@ -344,7 +363,7 @@ export default function GenerationPlan() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {!isGenerating && !generationError && !showPreview && (
           <div className="space-y-6">
-            <ProfileSummaryCard profile={mockProfile} onEdit={handleEditProfile} />
+            <ProfileSummaryCard profile={user} onEdit={handleEditProfile} />
 
             <CustomizationCard
               title="Workout Duration"
@@ -409,14 +428,14 @@ export default function GenerationPlan() {
           <div className="space-y-6">
             <PlanPreviewCard
               type="workout"
-              workoutDays={mockWorkoutDays}
+              workoutDays={ workoutPlan}
               onConfirm={handleConfirmPlan}
               onRegenerate={handleRegeneratePlan}
             />
 
             <PlanPreviewCard
               type="diet"
-              mealPlans={mockMealPlans}
+              mealPlans={ mealPlan}
               onConfirm={handleConfirmPlan}
               onRegenerate={handleRegeneratePlan}
             />
