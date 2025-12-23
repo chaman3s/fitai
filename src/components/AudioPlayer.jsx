@@ -53,8 +53,6 @@ export default function AudioPlayer({ onPlayWorkout, isPlaying }) {
           </p>
         </div>
       </div>
-
-      {/* Progress Bar */}
       <div className="mb-4">
         <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
           <div
@@ -67,8 +65,6 @@ export default function AudioPlayer({ onPlayWorkout, isPlaying }) {
           <span>{formatTime(duration)}</span>
         </div>
       </div>
-
-      {/* Controls */}
       <div className="flex items-center justify-center gap-4">
         <button
           onClick={() => setProgress(Math.max(0, progress - 10))}
@@ -83,7 +79,7 @@ export default function AudioPlayer({ onPlayWorkout, isPlaying }) {
           className="flex items-center justify-center w-14 h-14 bg-white text-primary rounded-full hover:scale-105 transition-smooth shadow-warm-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary"
           aria-label={isPlaying ? 'Pause narration' : 'Play narration'}
         >
-          <Icon
+          <Icon  className={`text-black`}
             name={isPlaying ? 'PauseIcon' : 'PlayIcon'}
             variant="solid"
             size={24}
