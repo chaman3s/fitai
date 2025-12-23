@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import AudioPlayer from '@/components/audioPlayer';
+import PlanActions from '@/components/PlanAction';
 
 
 
@@ -150,9 +151,24 @@ const  WorkoutDay= [
 }];
 export default function WorkoutPlan(){
     const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+     const handleRegenerate = () => {
+    if (confirm('Are you sure you want to regenerate your workout plan? This will create a new plan based on your profile.')) {
+      router.push('/planGeneration');
+    }
+    const handleExportPDF = () => {
+    alert('PDF export functionality will download your complete workout plan with all exercises and instructions.');
+  };
+   const handleShare = () => {
+    alert('Share your workout plan with friends via email or social media!');
+  };
+  };
     return (<>
           <AudioPlayer onPlayWorkout={() => setIsAudioPlaying(!isAudioPlaying)}
               isPlaying={isAudioPlaying} />
+        <PlanActions
+              onRegenerate={handleRegenerate}
+              onExportPDF={handleExportPDF}
+              onShare={handleShare} />
 
         </>);
 }
