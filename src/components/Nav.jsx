@@ -108,7 +108,7 @@ export default function Nav() {
                 );
               })}
 
-              <div className="ml-2 pl-2 border-l border-border">
+              <div className="ml-2 pl-2 border-l border-border hidden">
                 <ThemeToggle />
               </div>
             </div>

@@ -7,182 +7,127 @@ import Icon from '@/components/Icon';
 export default function MealCard({ meal, onPlayAudio, isPlaying }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // 🔹 Normalize data (AI-safe)
+  const calories = Number(meal.calories ?? meal.nutritionalInfo?.calories ?? 0);
+  const protein = Number(meal.protein ?? meal.nutritionalInfo?.protein ?? 0);
+  const carbs = Number(meal.carbohydrates ?? meal.nutritionalInfo?.carbs ?? 0);
+  const fats = Number(meal.fat ?? meal.nutritionalInfo?.fats ?? 0);
+  const fiber = Number(meal.fiber ?? meal.nutritionalInfo?.fiber ?? 0);
+
+  const ingredients = meal.ingredients ?? [];
+  const instructions = meal.instructions ?? [];
+
   const handlePlayAudio = () => {
-    const audioText = `${meal.name}. Preparation time: ${meal.prepTime} minutes. Cooking time: ${meal.cookTime} minutes. Ingredients: ${meal.ingredients.join(
-      ', '
-    )}. Instructions: ${meal.instructions.join('. ')}`;
-    onPlayAudio(audioText);
+    const audioText = `
+      ${meal.name}.
+      Calories ${calories}.
+      Protein ${protein} grams.
+      Carbs ${carbs} grams.
+      Fat ${fats} grams.
+    `;
+    onPlayAudio?.(audioText);
   };
 
   return (
-    <div className="bg-card rounded-xl shadow-warm-md overflow-hidden transition-smooth hover:shadow-warm-lg">
-      {/* Header */}
-      <div className="relative h-48 md:h-56 overflow-hidden">
-        <AppImage
-          src={meal.image}
-          alt={meal.alt}
-          className="w-full h-full object-cover"
-        />
+    <div className="bg-card rounded-xl shadow-warm-md overflow-hidden transition-smooth">
+      
+      {/* HEADER */}
+      <div className="relative h-40 overflow-hidden bg-muted">
+        {meal.image ? (
+          <AppImage
+            src={meal.image}
+            alt={meal.name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+            <Icon name="PhotoIcon" size={32} />
+          </div>
+        )}
+
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-4">
-          <h3 className="text-xl md:text-2xl font-heading font-bold text-white mb-1">
-            {meal.name}
-          </h3>
-          <p className="text-sm text-white/90 flex items-center gap-2">
-            <Icon name="ClockIcon" variant="outline" size={16} />
-            {meal.time}
-          </p>
+        <div className="absolute bottom-0 p-4">
+          <h3 className="text-lg font-bold text-white">{meal.name}</h3>
         </div>
       </div>
 
-      {/* Nutritional Summary */}
+      {/* MACROS */}
       <div className="p-4 bg-muted/50 border-b border-border">
         <div className="grid grid-cols-4 gap-2 text-center">
-          <div>
-            <p className="text-xs text-muted-foreground mb-1">Calories</p>
-            <p className="text-lg font-bold text-primary">
-              {meal.nutritionalInfo.calories}
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-muted-foreground mb-1">Protein</p>
-            <p className="text-lg font-bold text-secondary">
-              {meal.nutritionalInfo.protein}g
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-muted-foreground mb-1">Carbs</p>
-            <p className="text-lg font-bold text-accent">
-              {meal.nutritionalInfo.carbs}g
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-muted-foreground mb-1">Fats</p>
-            <p className="text-lg font-bold text-warning">
-              {meal.nutritionalInfo.fats}g
-            </p>
-          </div>
+          <Macro label="Cal" value={calories} color="text-primary" />
+          <Macro label="Protein" value={protein} unit="g" color="text-secondary" />
+          <Macro label="Carbs" value={carbs} unit="g" color="text-accent" />
+          <Macro label="Fats" value={fats} unit="g" color="text-warning" />
         </div>
       </div>
 
-      {/* Content */}
+      {/* CONTENT */}
       <div className="p-4">
-        {/* Portion & Time */}
-        <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <Icon name="ScaleIcon" variant="outline" size={16} />
-            <span>{meal.portionSize}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Icon name="FireIcon" variant="outline" size={16} />
-            <span>Prep: {meal.prepTime}m</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Icon name="ClockIcon" variant="outline" size={16} />
-            <span>Cook: {meal.cookTime}m</span>
-          </div>
-        </div>
-
-        {/* Expandable */}
-        <div
-          className={`transition-smooth overflow-hidden ${
-            isExpanded ? 'max-h-[2000px]' : 'max-h-0'
-          }`}
-        >
-          {/* Ingredients */}
-          <div className="mb-4">
-            <h4 className="text-base font-heading font-semibold text-foreground mb-2 flex items-center gap-2">
-              <Icon
-                name="ListBulletIcon"
-                variant="solid"
-                size={18}
-                className="text-primary"
-              />
-              Ingredients
-            </h4>
-            <ul className="space-y-1.5">
-              {meal.ingredients.map((ingredient, index) => (
-                <li
-                  key={index}
-                  className="text-sm text-foreground flex items-start gap-2"
-                >
-                  <span className="text-primary mt-1">•</span>
-                  <span>{ingredient}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Instructions */}
-          <div className="mb-4">
-            <h4 className="text-base font-heading font-semibold text-foreground mb-2 flex items-center gap-2">
-              <Icon
-                name="DocumentTextIcon"
-                variant="solid"
-                size={18}
-                className="text-secondary"
-              />
-              Instructions
-            </h4>
-            <ol className="space-y-2">
-              {meal.instructions.map((instruction, index) => (
-                <li
-                  key={index}
-                  className="text-sm text-foreground flex items-start gap-2"
-                >
-                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-secondary/10 text-secondary flex items-center justify-center text-xs font-bold">
-                    {index + 1}
-                  </span>
-                  <span className="pt-0.5">{instruction}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-
-          {/* Nutrition */}
-          <div className="bg-muted/30 rounded-lg p-3">
-            <h4 className="text-sm font-heading font-semibold text-foreground mb-2">
-              Nutritional Breakdown
-            </h4>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Fiber:</span>
-                <span className="font-medium text-foreground">
-                  {meal.nutritionalInfo.fiber}g
-                </span>
+        {isExpanded && (
+          <>
+            {/* INGREDIENTS (OPTIONAL) */}
+            {ingredients.length > 0 && (
+              <div className="mb-4">
+                <h4 className="font-semibold mb-2">Ingredients</h4>
+                <ul className="space-y-1 text-sm">
+                  {ingredients.map((i, idx) => (
+                    <li key={idx}>• {i}</li>
+                  ))}
+                </ul>
               </div>
-            </div>
-          </div>
-        </div>
+            )}
 
-        {/* Actions */}
+            {/* INSTRUCTIONS (OPTIONAL) */}
+            {instructions.length > 0 && (
+              <div className="mb-4">
+                <h4 className="font-semibold mb-2">Instructions</h4>
+                <ol className="space-y-1 text-sm">
+                  {instructions.map((step, idx) => (
+                    <li key={idx}>{idx + 1}. {step}</li>
+                  ))}
+                </ol>
+              </div>
+            )}
+
+            {/* FIBER */}
+            {fiber > 0 && (
+              <div className="text-sm text-muted-foreground">
+                Fiber: <b>{fiber}g</b>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ACTIONS */}
         <div className="flex gap-2 mt-4">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg font-medium text-sm transition-smooth hover:bg-primary/90 focus:outline-none focus:ring-3 focus:ring-primary focus:ring-offset-2"
+            className="flex-1 bg-primary text-white py-2 rounded-lg text-sm"
           >
-            <Icon
-              name={isExpanded ? 'ChevronUpIcon' : 'ChevronDownIcon'}
-              variant="solid"
-              size={18}
-            />
-            {isExpanded ? 'Show Less' : 'View Details'}
+            {isExpanded ? 'Hide Details' : 'View Details'}
           </button>
 
           <button
             onClick={handlePlayAudio}
             disabled={isPlaying}
-            className="px-4 py-2.5 bg-secondary text-secondary-foreground rounded-lg font-medium text-sm transition-smooth hover:bg-secondary/90 focus:outline-none focus:ring-3 focus:ring-secondary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            aria-label="Play meal audio narration"
+            className="px-4 py-2 bg-secondary text-white rounded-lg"
           >
-            <Icon
-              name={isPlaying ? 'PauseIcon' : 'SpeakerWaveIcon'}
-              variant="solid"
-              size={18}
-            />
+            <Icon name="SpeakerWaveIcon" size={18} />
           </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* 🔹 Helper */
+function Macro({ label, value, unit = '', color }) {
+  return (
+    <div>
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className={`text-lg font-bold ${color}`}>
+        {value}{unit}
+      </p>
     </div>
   );
 }

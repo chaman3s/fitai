@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import MealCard from '@/components/MealCard';
 import DailyNutritionSummary from '@/components/DailyNutritionSummary';
 import ShoppingList from '@/components/ShoppingList';
@@ -8,101 +8,17 @@ import DietaryRestrictions from '@/components/DietaryRestrictions';
 import MealTimeline from '@/components/MealTimeLine';
 import HydrationTracker from '@/components/HydrationTracker';
 import Icon from '@/components/Icon';
+import { useProfile } from "@/contexts/profileContext";
+
+const DAYS = [
+  "Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"
+];
 
 export default function DietPlan() {
-  const [isHydrated, setIsHydrated] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [showExportModal, setShowExportModal] = useState(false);
+  const { mealPlan } = useProfile(); // <-- real data
+  const [selectedDay, setSelectedDay] = useState("Monday");
 
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-
-  const mealCategories = [
-    {
-      id: 'breakfast',
-      name: 'Breakfast',
-      icon: 'SunIcon',
-      meals: [
-        {
-          id: 'b1',
-          name: 'Protein-Packed Oatmeal Bowl',
-          time: '7:00 AM - 8:00 AM',
-          image: 'https://images.unsplash.com/photo-1630234674868-404d00118f7e',
-          alt: 'Oatmeal bowl',
-          ingredients: [],
-          instructions: [],
-          portionSize: '1 bowl',
-          nutritionalInfo: {
-            calories: 485,
-            protein: 28,
-            carbs: 62,
-            fats: 16,
-            fiber: 12,
-          },
-          prepTime: 5,
-          cookTime: 10,
-        },
-      ],
-    },
-    {
-      id: 'lunch',
-      name: 'Lunch',
-      icon: 'FireIcon',
-      meals: [],
-    },
-    {
-      id: 'dinner',
-      name: 'Dinner',
-      icon: 'MoonIcon',
-      meals: [],
-    },
-    {
-      id: 'snacks',
-      name: 'Snacks',
-      icon: 'CakeIcon',
-      meals: [],
-    },
-  ];
-
-  const allMeals = mealCategories.flatMap((cat) => cat.meals);
-
-  const filteredMeals =
-    selectedCategory === 'all'
-      ? allMeals
-      : mealCategories.find((cat) => cat.id === selectedCategory)?.meals || [];
-
-  const totalNutrition = allMeals.reduce(
-    (acc, meal) => ({
-      calories: acc.calories + meal.nutritionalInfo.calories,
-      protein: acc.protein + meal.nutritionalInfo.protein,
-      carbs: acc.carbs + meal.nutritionalInfo.carbs,
-      fats: acc.fats + meal.nutritionalInfo.fats,
-      fiber: acc.fiber + meal.nutritionalInfo.fiber,
-    }),
-    { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 }
-  );
-
-  const dietaryRestrictions = [
-    { id: '1', label: 'High Protein', icon: 'BoltIcon', active: true },
-    { id: '2', label: 'Low Carb', icon: 'MinusCircleIcon', active: false },
-    { id: '3', label: 'Gluten Free', icon: 'ShieldCheckIcon', active: false },
-    { id: '4', label: 'Dairy Free', icon: 'XCircleIcon', active: false },
-  ];
-
-  const mealTimeline = [
-    { id: '1', mealType: 'Breakfast', time: '7:00 AM', calories: 485, icon: 'SunIcon' },
-    { id: '2', mealType: 'Lunch', time: '12:30 PM', calories: 620, icon: 'FireIcon' },
-    { id: '3', mealType: 'Dinner', time: '7:00 PM', calories: 580, icon: 'MoonIcon' },
-  ];
-
-  const handlePlayAudio = () => {
-    setIsPlayingAudio(true);
-    setTimeout(() => setIsPlayingAudio(false), 3000);
-  };
-
-  if (!isHydrated) {
+  if (!mealPlan) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -110,11 +26,84 @@ export default function DietPlan() {
     );
   }
 
+  // ---------------------------
+  // 🔹 Convert object → array
+  // ---------------------------
+  const mealsForDay = useMemo(() => {
+    const dayMeals = mealPlan[selectedDay];
+    if (!dayMeals) return [];
+
+    return Object.entries(dayMeals).map(([mealType, meal]) => ({
+      id: `${selectedDay}-${mealType}`,
+      mealType,
+      ...meal,
+    }));
+  }, [mealPlan, selectedDay]);
+
+  // ---------------------------
+  // 🔹 Nutrition totals
+  // ---------------------------
+  const totalNutrition = mealsForDay.reduce(
+    (acc, meal) => ({
+      calories: acc.calories + Number(meal.calories || 0),
+      protein: acc.protein + Number(meal.protein || 0),
+      carbs: acc.carbs + Number(meal.carbohydrates || 0),
+      fats: acc.fats + Number(meal.fat || 0),
+      fiber: acc.fiber + 0, // fiber not provided
+    }),
+    { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 }
+  );
+
+  // ---------------------------
+  // 🔹 Timeline
+  // ---------------------------
+  const mealTimeline = mealsForDay.map((meal, index) => ({
+    id: index,
+    mealType: meal.mealType,
+    time:
+      meal.mealType === "breakfast"
+        ? "7:00 AM"
+        : meal.mealType === "lunch"
+        ? "1:00 PM"
+        : meal.mealType === "snack"
+        ? "5:00 PM"
+        : "8:00 PM",
+    calories: meal.calories,
+    icon:
+      meal.mealType === "breakfast"
+        ? "SunIcon"
+        : meal.mealType === "lunch"
+        ? "FireIcon"
+        : meal.mealType === "snack"
+        ? "CakeIcon"
+        : "MoonIcon",
+  }));
+
   return (
     <div className="min-h-screen bg-background pb-20">
       <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
         {/* LEFT */}
         <div className="lg:col-span-2 space-y-6">
+
+          {/* DAY SELECTOR */}
+          <div className="flex gap-2 overflow-x-auto">
+            {DAYS.map((day) => (
+              <button
+                key={day}
+                onClick={() => setSelectedDay(day)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  selectedDay === day
+                    ? "bg-primary text-white"
+                    : "bg-muted text-foreground"
+                }`}
+              >
+                {day}
+              </button>
+            ))}
+          </div>
+
+          {/* SUMMARY */}
           <DailyNutritionSummary
             totalCalories={totalNutrition.calories}
             totalProtein={totalNutrition.protein}
@@ -127,14 +116,21 @@ export default function DietPlan() {
             targetFats={73}
           />
 
-          <DietaryRestrictions restrictions={dietaryRestrictions} />
-
-          {filteredMeals.map((meal) => (
+          {/* MEALS */}
+          {mealsForDay.map((meal) => (
             <MealCard
               key={meal.id}
-              meal={meal}
-              onPlayAudio={handlePlayAudio}
-              isPlaying={isPlayingAudio}
+              meal={{
+                name: meal.name,
+                nutritionalInfo: {
+                  calories: meal.calories,
+                  protein: meal.protein,
+                  carbs: meal.carbohydrates,
+                  fats: meal.fat,
+                  fiber: 0,
+                },
+                mealType: meal.mealType,
+              }}
             />
           ))}
         </div>
@@ -147,11 +143,8 @@ export default function DietPlan() {
         </div>
       </div>
 
-      {/* MOBILE EXPORT */}
-      <button
-        onClick={() => setShowExportModal(true)}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-xl"
-      >
+      {/* EXPORT BUTTON */}
+      <button className="fixed bottom-6 right-6 w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-xl">
         <Icon name="ArrowDownTrayIcon" variant="solid" size={24} />
       </button>
     </div>

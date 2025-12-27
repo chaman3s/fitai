@@ -9,95 +9,6 @@ import PlanActions from '@/components/PlanAction';
 import MotivationalQuote from '@/components/MotivationalQuote';
 import { useProfile } from "@/contexts/profileContext";
 import { getDayNumber } from '@/lib/utils';
-const mockWorkoutPlan = [
-  {
-    day: 1,
-    title: 'Upper Body Strength',
-    focus: 'Chest, Shoulders, Triceps',
-    duration: '45 min',
-    caloriesBurned: '320 kcal',
-    exercises: [
-      {
-        id: 'ex1',
-        name: 'Push-ups',
-        sets: 3,
-        reps: '12-15',
-        restTime: '60',
-        difficulty: 'Beginner',
-        instructions:
-          'Start in a plank position with hands shoulder-width apart.\nLower your body until chest nearly touches the floor.\nPush back up to starting position.\nKeep your core engaged throughout the movement.\nMaintain a straight line from head to heels.',
-        imageUrl:
-          'https://img.rocket.new/generatedImages/rocket_gen_img_1d9390292-1764649132607.png',
-        imageAlt:
-          'Athletic man performing push-ups on yoga mat in bright gym with proper form',
-        equipment: ['Yoga Mat'],
-        targetMuscles: ['Chest', 'Triceps', 'Shoulders', 'Core']
-      },
-      {
-        id: 'ex2',
-        name: 'Dumbbell Shoulder Press',
-        sets: 4,
-        reps: '10-12',
-        restTime: '90',
-        difficulty: 'Intermediate',
-        instructions:
-          'Sit on a bench with back support.\nHold dumbbells at shoulder height with palms facing forward.\nPress weights overhead until arms are fully extended.\nLower back to starting position with control.\nKeep core tight and avoid arching your back.',
-        imageUrl:
-          'https://img.rocket.new/generatedImages/rocket_gen_img_1d9390292-1764649132607.png',
-        imageAlt:
-          'Fit woman performing dumbbell shoulder press exercise on bench in modern gym',
-        equipment: ['Dumbbells', 'Bench'],
-        targetMuscles: ['Shoulders', 'Triceps', 'Upper Chest']
-      },
-      {
-        id: 'ex3',
-        name: 'Tricep Dips',
-        sets: 3,
-        reps: '10-15',
-        restTime: '60',
-        difficulty: 'Intermediate',
-        instructions:
-          'Position hands shoulder-width apart on a stable bench or chair.\nExtend legs forward with heels on the ground.\nLower body by bending elbows to 90 degrees.\nPush back up to starting position.\nKeep elbows close to your body.',
-        imageUrl:
-          'https://img.rocket.new/generatedImages/rocket_gen_img_11596d5de-1764649130144.png',
-        imageAlt:
-          'Athletic person doing tricep dips on parallel bars outdoors in park setting',
-        equipment: ['Bench', 'Chair'],
-        targetMuscles: ['Triceps', 'Shoulders', 'Chest']
-      }
-    ]
-  },
-  {
-    day: 2,
-    title: 'Lower Body Power',
-    focus: 'Legs, Glutes, Core',
-    duration: '50 min',
-    caloriesBurned: '380 kcal',
-    exercises: [
-      {
-        id: 'ex4',
-        name: 'Squats',
-        sets: 4,
-        reps: '12-15',
-        restTime: '90',
-        difficulty: 'Beginner',
-        instructions:
-          'Stand with feet shoulder-width apart.\nLower your body by bending knees and hips.\nKeep chest up and weight on heels.\nGo down until thighs are parallel to ground.\nPush through heels to return to start.',
-        imageUrl:
-          'https://img.rocket.new/generatedImages/rocket_gen_img_155b601f9-1765763464893.png',
-        imageAlt:
-          'Strong woman performing bodyweight squats with perfect form in fitness studio',
-        equipment: ['None'],
-        targetMuscles: ['Quadriceps', 'Glutes', 'Hamstrings', 'Core']
-      }
-    ]
-  }
-];
-
-const mockQuote = {
-  quote: "The only bad workout is the one that didn't happen.",
-  author: 'Unknown'
-};
 
 export default function WorkoutPlan() {
   const { workoutPlan, user} = useProfile();
@@ -168,7 +79,7 @@ console.log("total excersice:",totalExercises)
           </div>
         </div>
 
-        <MotivationalQuote {...mockQuote} />
+        <MotivationalQuote/>
 
         <div className="space-y-4">
           {Object.entries(workoutPlan).map(([key,value]) => (
