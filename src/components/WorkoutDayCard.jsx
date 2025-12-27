@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import Icon from '@/components/Icon';
 import AppImage from '@/components/AppImage';
+import { getDayNumber } from '@/lib/utils';
+
 
 export default function WorkoutDayCard({
   workoutDay,
@@ -10,14 +12,39 @@ export default function WorkoutDayCard({
   onToggle,
   onExerciseComplete,
   completedExercises,
-}) {
+
+})
+ {
+  const uID= useId()
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [restTimer, setRestTimer] = useState(null);
+console.log("WorkoutDayCard props:", { workoutDay, isExpanded, onToggle, onExerciseComplete, completedExercises });
 
-  const startRestTimer = (exerciseId, restTime) => {
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+function getBodyCategory(muscle) {
+  const map = {
+    chest: "upper body",
+    back: "upper body",
+    shoulders: "upper body",
+    biceps: "upper body",
+    triceps: "upper body",
+
+    legs: "lower body",
+    quads: "lower body",
+    hamstrings: "lower body",
+    calves: "lower body",
+    glutes: "lower body",
+    rest: "rest day",
+    abs:  "core",
+  };
+  return capitalizeFirstLetter(map[muscle.toLowerCase()]) || "unknown";
+}
+const startRestTimer = (exerciseId, restTime) => {
     const seconds = parseInt(restTime);
     setRestTimer({ exerciseId, timeLeft: seconds });
-
+    
     const interval = setInterval(() => {
       setRestTimer((prev) => {
         if (!prev || prev.timeLeft <= 1) {
@@ -54,16 +81,13 @@ export default function WorkoutDayCard({
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-primary to-secondary rounded-lg">
               <span className="text-xl font-heading font-bold text-white">
-                {workoutDay.day}
+                {getDayNumber(workoutDay[0].toLowerCase()) + 1}
               </span>
             </div>
             <div className="text-left">
               <h3 className="text-lg font-heading font-semibold">
-                {workoutDay.title}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {workoutDay.focus}
-              </p>
+                {workoutDay[1].workoutName}
+              </h3> 
             </div>
           </div>
 
@@ -81,15 +105,15 @@ export default function WorkoutDayCard({
         {isExpanded && (
           <div className="px-6 pb-6 space-y-4">
             <div className="space-y-3">
-              {workoutDay.exercises.map((exercise) => {
+              {workoutDay[1].exercises.map((exercise,index) => {
                 const isCompleted = completedExercises.has(
-                  `${workoutDay.day}-${exercise.id}`
+                  `${getDayNumber(workoutDay[0].toLowerCase())}-${index}`
                 );
-                const isResting = restTimer?.exerciseId === exercise.id;
+                const isResting = restTimer?.exerciseId === uID+index;
 
                 return (
                   <div
-                    key={exercise.id}
+                    key={index}
                     className={`rounded-lg border p-4 transition ${
                       isCompleted
                         ? 'bg-success/5 border-success/30'
@@ -100,7 +124,7 @@ export default function WorkoutDayCard({
                       {/* Checkbox */}
                       <button
                         onClick={() =>
-                          onExerciseComplete(workoutDay.day, exercise.id)
+                          onExerciseComplete(getDayNumber(workoutDay[0].toLowerCase()), index)
                         }
                         className={`w-6 h-6 border-2 rounded-md flex items-center justify-center ${
                           isCompleted
@@ -122,42 +146,18 @@ export default function WorkoutDayCard({
                       <div className="flex-1">
                         <div className="flex justify-between mb-2">
                           <h4 className="font-semibold">{exercise.name}</h4>
-                          <span
-                            className={`px-2 py-1 text-xs rounded border ${getDifficultyColor(
-                              exercise.difficulty
-                            )}`}
-                          >
-                            {exercise.difficulty}
-                          </span>
+                          
                         </div>
 
                         <div className="text-sm text-muted-foreground mb-3">
                           {exercise.sets} sets • {exercise.reps} reps •{' '}
                           {exercise.restTime}s rest
                         </div>
-
-                        <div className="flex gap-2 flex-wrap mb-3">
-                          {exercise.equipment.map((item, i) => (
-                            <span
-                              key={i}
-                              className="px-2 py-1 bg-muted text-xs rounded"
-                            >
-                              {item}
-                            </span>
-                          ))}
-                        </div>
-
                         <div className="flex gap-2">
-                          <button
-                            onClick={() => setSelectedExercise(exercise)}
-                            className="px-3 py-1.5 bg-primary/10 text-primary rounded text-sm"
-                          >
-                            View Details
-                          </button>
                           <button
                             disabled={isResting}
                             onClick={() =>
-                              startRestTimer(exercise.id, exercise.restTime)
+                              startRestTimer(uID+index, exercise.restTime)
                             }
                             className="px-3 py-1.5 bg-secondary/10 text-secondary rounded text-sm disabled:opacity-50"
                           >
@@ -177,62 +177,6 @@ export default function WorkoutDayCard({
       </div>
 
       {/* Modal */}
-      {selectedExercise && (
-        <div
-          className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4"
-          onClick={() => setSelectedExercise(null)}
-        >
-          <div
-            className="bg-card rounded-xl max-w-2xl w-full overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-6 space-y-6">
-              <div className="h-64 bg-muted rounded overflow-hidden">
-                <AppImage
-                  src={selectedExercise.imageUrl}
-                  alt={selectedExercise.imageAlt}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              <div>
-                <h4 className="font-semibold mb-2">Instructions</h4>
-                <p className="whitespace-pre-line">
-                  {selectedExercise.instructions}
-                </p>
-              </div>
-
-              <div>
-                <h4 className="font-semibold mb-2">Target Muscles</h4>
-                <div className="flex flex-wrap gap-2">
-                  {selectedExercise.targetMuscles.map((m, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1 bg-primary/10 text-primary rounded"
-                    >
-                      {m}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <h4 className="font-semibold mb-2">Equipment</h4>
-                <div className="flex flex-wrap gap-2">
-                  {selectedExercise.equipment.map((e, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1 bg-muted rounded"
-                    >
-                      {e}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

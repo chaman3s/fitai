@@ -1,0 +1,374 @@
+[
+    {
+    "success": true,
+    "planId": "694d2d5830aacdaf575d86a7",
+    "plan": {
+        "fitnessPlan": {
+            "weeklyWorkoutSchedule": {
+                "Monday": {
+                    "workoutName": "Full Body Workout",
+                    "exercises": [
+                        {
+                            "name": "Burpees",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        },
+                        {
+                            "name": "Mountain Climbers",
+                            "sets": 3,
+                            "reps": 20,
+                            "restTime": 60
+                        },
+                        {
+                            "name": "Push-ups",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        },
+                        {
+                            "name": "Squats",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        },
+                        {
+                            "name": "Lunges",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        }
+                    ]
+                },
+                "Tuesday": {
+                    "workoutName": "Upper Body Workout",
+                    "exercises": [
+                        {
+                            "name": "Pull-ups",
+                            "sets": 3,
+                            "reps": 8,
+                            "restTime": 60
+                        },
+                        {
+                            "name": "Dumbbell Chest Press",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        },
+                        {
+                            "name": "Incline Dumbbell Press",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        },
+                        {
+                            "name": "Bicep Curls",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        },
+                        {
+                            "name": "Tricep Dips",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        }
+                    ]
+                },
+                "Wednesday": {
+                    "workoutName": "Rest Day"
+                },
+                "Thursday": {
+                    "workoutName": "Lower Body Workout",
+                    "exercises": [
+                        {
+                            "name": "Squats",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        },
+                        {
+                            "name": "Lunges",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        },
+                        {
+                            "name": "Calf Raises",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        },
+                        {
+                            "name": "Leg Press",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        },
+                        {
+                            "name": "Glute Bridges",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        }
+                    ]
+                },
+                "Friday": {
+                    "workoutName": "Core Workout",
+                    "exercises": [
+                        {
+                            "name": "Plank",
+                            "sets": 3,
+                            "reps": 60,
+                            "restTime": 60
+                        },
+                        {
+                            "name": "Russian Twists",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        },
+                        {
+                            "name": "Leg Raises",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        },
+                        {
+                            "name": "Bicycle Crunches",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        },
+                        {
+                            "name": "Woodchoppers",
+                            "sets": 3,
+                            "reps": 12,
+                            "restTime": 60
+                        }
+                    ]
+                },
+                "Saturday": {
+                    "workoutName": "Rest Day"
+                },
+                "Sunday": {
+                    "workoutName": "Rest Day"
+                }
+            },
+            "dailyDietPlan": {
+                "Monday": {
+                    "breakfast": {
+                        "name": "Oatmeal with Banana and Almond Milk",
+                        "calories": 350,
+                        "protein": 20,
+                        "carbohydrates": 60,
+                        "fat": 10
+                    },
+                    "snack": {
+                        "name": "Greek Yogurt with Berries",
+                        "calories": 150,
+                        "protein": 15,
+                        "carbohydrates": 30,
+                        "fat": 0
+                    },
+                    "lunch": {
+                        "name": "Grilled Chicken Breast with Brown Rice and Vegetables",
+                        "calories": 400,
+                        "protein": 40,
+                        "carbohydrates": 60,
+                        "fat": 10
+                    },
+                    "dinner": {
+                        "name": "Grilled Salmon with Quinoa and Steamed Broccoli",
+                        "calories": 500,
+                        "protein": 50,
+                        "carbohydrates": 60,
+                        "fat": 20
+                    }
+                },
+                "Tuesday": {
+                    "breakfast": {
+                        "name": "Scrambled Eggs with Whole Wheat Toast and Avocado",
+                        "calories": 300,
+                        "protein": 20,
+                        "carbohydrates": 40,
+                        "fat": 15
+                    },
+                    "snack": {
+                        "name": "Cottage Cheese with Cucumber Slices",
+                        "calories": 150,
+                        "protein": 20,
+                        "carbohydrates": 5,
+                        "fat": 0
+                    },
+                    "lunch": {
+                        "name": "Grilled Turkey Breast with Brown Rice and Mixed Vegetables",
+                        "calories": 450,
+                        "protein": 40,
+                        "carbohydrates": 60,
+                        "fat": 15
+                    },
+                    "dinner": {
+                        "name": "Grilled Chicken Breast with Roasted Sweet Potatoes and Green Beans",
+                        "calories": 500,
+                        "protein": 50,
+                        "carbohydrates": 60,
+                        "fat": 20
+                    }
+                },
+                "Wednesday": {
+                    "breakfast": {
+                        "name": "Smoothie Bowl with Banana, Spinach, and Almond Milk",
+                        "calories": 350,
+                        "protein": 20,
+                        "carbohydrates": 60,
+                        "fat": 15
+                    },
+                    "snack": {
+                        "name": "Rice Cakes with Almond Butter and Banana Slices",
+                        "calories": 150,
+                        "protein": 4,
+                        "carbohydrates": 30,
+                        "fat": 8
+                    },
+                    "lunch": {
+                        "name": "Grilled Chicken Breast with Quinoa and Steamed Asparagus",
+                        "calories": 400,
+                        "protein": 40,
+                        "carbohydrates": 60,
+                        "fat": 10
+                    },
+                    "dinner": {
+                        "name": "Grilled Shrimp with Brown Rice and Mixed Vegetables",
+                        "calories": 500,
+                        "protein": 50,
+                        "carbohydrates": 60,
+                        "fat": 20
+                    }
+                },
+                "Thursday": {
+                    "breakfast": {
+                        "name": "Avocado Toast with Scrambled Eggs",
+                        "calories": 300,
+                        "protein": 20,
+                        "carbohydrates": 40,
+                        "fat": 20
+                    },
+                    "snack": {
+                        "name": "Apple Slices with Peanut Butter",
+                        "calories": 150,
+                        "protein": 4,
+                        "carbohydrates": 20,
+                        "fat": 8
+                    },
+                    "lunch": {
+                        "name": "Grilled Chicken Breast with Whole Wheat Pita and Mixed Vegetables",
+                        "calories": 450,
+                        "protein": 40,
+                        "carbohydrates": 60,
+                        "fat": 15
+                    },
+                    "dinner": {
+                        "name": "Grilled Chicken Breast with Roasted Carrots and Brown Rice",
+                        "calories": 500,
+                        "protein": 50,
+                        "carbohydrates": 60,
+                        "fat": 20
+                    }
+                },
+                "Friday": {
+                    "breakfast": {
+                        "name": "Omelette with Vegetables and Whole Wheat Toast",
+                        "calories": 250,
+                        "protein": 20,
+                        "carbohydrates": 40,
+                        "fat": 15
+                    },
+                    "snack": {
+                        "name": "Hard-Boiled Egg",
+                        "calories": 78,
+                        "protein": 6,
+                        "carbohydrates": 0,
+                        "fat": 5
+                    },
+                    "lunch": {
+                        "name": "Grilled Chicken Breast with Quinoa and Steamed Green Beans",
+                        "calories": 400,
+                        "protein": 40,
+                        "carbohydrates": 60,
+                        "fat": 10
+                    },
+                    "dinner": {
+                        "name": "Grilled Salmon with Brown Rice and Mixed Vegetables",
+                        "calories": 500,
+                        "protein": 50,
+                        "carbohydrates": 60,
+                        "fat": 20
+                    }
+                },
+                "Saturday": {
+                    "breakfast": {
+                        "name": "Pancakes with Fresh Fruit and Yogurt",
+                        "calories": 300,
+                        "protein": 20,
+                        "carbohydrates": 60,
+                        "fat": 15
+                    },
+                    "snack": {
+                        "name": "Greek Yogurt with Berries",
+                        "calories": 150,
+                        "protein": 15,
+                        "carbohydrates": 30,
+                        "fat": 0
+                    },
+                    "lunch": {
+                        "name": "Grilled Chicken Breast with Whole Wheat Pita and Mixed Vegetables",
+                        "calories": 450,
+                        "protein": 40,
+                        "carbohydrates": 60,
+                        "fat": 15
+                    },
+                    "dinner": {
+                        "name": "Grilled Shrimp with Quinoa and Steamed Broccoli",
+                        "calories": 500,
+                        "protein": 50,
+                        "carbohydrates": 60,
+                        "fat": 20
+                    }
+                },
+                "Sunday": {
+                    "breakfast": {
+                        "name": "Breakfast Burrito with Scrambled Eggs and Avocado",
+                        "calories": 350,
+                        "protein": 20,
+                        "carbohydrates": 40,
+                        "fat": 20
+                    },
+                    "snack": {
+                        "name": "Cottage Cheese with Fresh Fruit",
+                        "calories": 150,
+                        "protein": 20,
+                        "carbohydrates": 5,
+                        "fat": 0
+                    },
+                    "lunch": {
+                        "name": "Grilled Chicken Breast with Brown Rice and Mixed Vegetables",
+                        "calories": 450,
+                        "protein": 40,
+                        "carbohydrates": 60,
+                        "fat": 15
+                    },
+                    "dinner": {
+                        "name": "Grilled Chicken Breast with Roasted Sweet Potatoes and Green Beans",
+                        "calories": 500,
+                        "protein": 50,
+                        "carbohydrates": 60,
+                        "fat": 20
+                    }
+                }
+            }
+        }
+    }
+}
+
+]

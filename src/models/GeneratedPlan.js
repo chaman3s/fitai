@@ -1,23 +1,24 @@
-
 import mongoose from "mongoose";
 
 const GeneratedPlanSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
       ref: "User",
+      required: true,
     },
-
-    input: {
+     input: {
       profile: Object,
-      preferences: Object,
+      workoutDuration: String,
+      mealComplexity: String,
+      focusArea: String,
+      advancedSettings: Object,
+    },
+    output: {
+      type: Object,
+      required: true,
     },
 
-    output: {
-      workoutPlan: Object,
-      dietPlan: Object,
-    },
 
     model: {
       type: String,

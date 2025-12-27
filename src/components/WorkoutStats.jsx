@@ -4,8 +4,7 @@ export default function WorkoutStats({
   totalDays,
   totalExercises,
   avgDuration,
-  totalCalories,
-  difficulty,
+  currentWeight,
   location
 }) {
   const stats = [
@@ -18,26 +17,14 @@ export default function WorkoutStats({
     {
       icon: 'FireIcon',
       label: 'Total Exercises',
-      value: totalExercises.toString(),
+      value: totalExercises,
       color: 'text-secondary'
     },
     {
-      icon: 'ClockIcon',
-      label: 'Avg Duration',
-      value: avgDuration,
-      color: 'text-accent'
-    },
-    {
       icon: 'BoltIcon',
-      label: 'Total Calories',
-      value: totalCalories,
+      label: 'Current Weight',
+      value: currentWeight,
       color: 'text-warning'
-    },
-    {
-      icon: 'ChartBarIcon',
-      label: 'Difficulty',
-      value: difficulty,
-      color: 'text-success'
     },
     {
       icon: 'MapPinIcon',

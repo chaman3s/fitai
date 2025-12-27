@@ -9,6 +9,8 @@ export const ProfileProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [healthInfo, setHealthInfo] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [workoutPlan, setWorkoutPlan] = useState(null);
+  const [mealPlan, setMealPlan] = useState(null);
 
   const fetchProfile = async () => {
     try {
@@ -34,6 +36,23 @@ export const ProfileProvider = ({ children }) => {
       setLoading(false);
     }
   };
+  const fetchPlan = async () => {
+    try { 
+      fetch('/api/planGeneration', { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        console.log("Fetched plan data:", data.plans[data.plans.length - 1].output);
+        setWorkoutPlan(data.plans[data.plans.length - 1].output.plan.fitnessPlan.weeklyWorkoutSchedule);
+        setMealPlan(data.plans[data.plans.length - 1].output.plan.fitnessPlan.dailyDietPlan);
+      })
+      .catch(() => {
+        setWorkoutPlan(null);
+        setMealPlan(null);
+      });
+    } catch (error) {
+      console.error("Plan fetch error:", error);
+    }
+  };
   const updateUser = async (payload) => {
     const res = await fetch("/api/profile", {
       method: "PUT",
@@ -57,6 +76,7 @@ export const ProfileProvider = ({ children }) => {
   };
   useEffect(() => {
     fetchProfile();
+    fetchPlan ();
   }, []);
 
   return (
@@ -68,6 +88,9 @@ export const ProfileProvider = ({ children }) => {
         refetchProfile: fetchProfile,
         updateUser,
         updateHealthInfo,
+        workoutPlan,
+        mealPlan,
+        refetchPlan: fetchPlan,
       }}
     >
       {children}

@@ -11,7 +11,9 @@ export async function generatePlanWithFallback(prompt) {
   try {
     console.log(`Attempting to generate plan with prompt`);
     // 🔹 TRY GEMINI FIRST
+    console.log("Generated prompt:", prompt);
     const result = await geminiModel.generateContent(prompt);
+    console.log("Gemini response received,", result);
     return result.response.text();
   } catch (err) {
   

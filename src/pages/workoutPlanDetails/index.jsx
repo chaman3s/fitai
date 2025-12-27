@@ -7,7 +7,8 @@ import WorkoutStats from '@/components/WorkoutStats';
 import AudioPlayer from '@/components/AudioPlayer';
 import PlanActions from '@/components/PlanAction';
 import MotivationalQuote from '@/components/MotivationalQuote';
-
+import { useProfile } from "@/contexts/profileContext";
+import { getDayNumber } from '@/lib/utils';
 const mockWorkoutPlan = [
   {
     day: 1,
@@ -99,12 +100,16 @@ const mockQuote = {
 };
 
 export default function WorkoutPlan() {
+  const { workoutPlan, user} = useProfile();
+
   const router = useRouter();
   const [expandedDay, setExpandedDay] = useState(1);
   const [completedExercises, setCompletedExercises] = useState(new Set());
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
 
+  console.log("Workout Plan from Context:", workoutPlan);
+  console.log("User from Context:", user);
   useEffect(() => {
     setIsHydrated(true);
     const saved = localStorage.getItem('completedExercises');
@@ -135,11 +140,11 @@ export default function WorkoutPlan() {
     });
   };
 
-  const totalExercises = mockWorkoutPlan.reduce(
-    (acc, day) => acc + day.exercises.length,
-    0
-  );
-
+  const totalExercises = Object.entries(workoutPlan).reduce(
+  (acc, [, value]) => acc + (value.exercises?.length || 0),
+  0
+);
+console.log("total excersice:",totalExercises)
   if (!isHydrated) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -165,18 +170,13 @@ export default function WorkoutPlan() {
 
         <MotivationalQuote {...mockQuote} />
 
-        <AudioPlayer
-          onPlayWorkout={() => setIsAudioPlaying(!isAudioPlaying)}
-          isPlaying={isAudioPlaying}
-        />
-
         <div className="space-y-4">
-          {mockWorkoutPlan.map((day) => (
+          {Object.entries(workoutPlan).map(([key,value]) => (
             <WorkoutDayCard
-              key={day.day}
-              workoutDay={day}
-              isExpanded={expandedDay === day.day}
-              onToggle={() => handleToggleDay(day.day)}
+              key={getDayNumber(key.toLowerCase())}
+              workoutDay={[key,value]}
+              isExpanded={expandedDay === getDayNumber(key.toLowerCase())}
+              onToggle={() => handleToggleDay(getDayNumber(key.toLowerCase()))}
               onExerciseComplete={handleExerciseComplete}
               completedExercises={completedExercises}
             />
@@ -184,18 +184,10 @@ export default function WorkoutPlan() {
         </div>
 
         <WorkoutStats
-          totalDays={mockWorkoutPlan.length}
+          totalDays={7}
           totalExercises={totalExercises}
-          avgDuration="45 min"
-          totalCalories="1,120 kcal"
-          difficulty="Intermediate"
-          location="Gym"
-        />
-
-        <PlanActions
-          onRegenerate={() => router.push('/plan-generation')}
-          onExportPDF={() => alert('Export PDF')}
-          onShare={() => alert('Share plan')}
+          currentWeight={`${user?.weight || 'N/A'} kg`}
+          location={user?.preferredWorkoutLocation || "Gym"}
         />
       </div>
     </div>

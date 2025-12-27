@@ -5,15 +5,26 @@ import Icon from '@/components/Icon';
 
 export default function PlanPreviewCard({
   type,
-  workoutDays,
-  mealPlans,
+  workoutDays = {},
+  mealPlans = {},
   onConfirm,
-  onRegenerate
+  onRegenerate,
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [regenerate, setRegenerate] = useState(false);
+
+  const handleRegenerate = async () => {
+    try {
+      setRegenerate(true);
+      await onRegenerate(); // ✅ function call
+    } finally {
+      setRegenerate(false);
+    }
+  };
 
   return (
     <div className="bg-card rounded-xl shadow-warm-md border border-border overflow-hidden">
+      {/* HEADER */}
       <div className="p-6 bg-gradient-to-r from-primary/5 to-secondary/5 border-b border-border">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -25,112 +36,146 @@ export default function PlanPreviewCard({
                 className="text-white"
               />
             </div>
+
             <div>
-              <h3 className="text-xl font-heading font-bold text-foreground">
-                {type === 'workout' ? 'Workout Plan Preview' : 'Diet Plan Preview'}
-              </h3>
-              <p className="text-caption text-muted-foreground text-sm">
+              <h3 className="text-xl font-bold">
                 {type === 'workout'
-                  ? `${workoutDays?.length || 0} days of customized exercises`
-                  : `${mealPlans?.length || 0} meals per day with calorie tracking`}
+                  ? 'Workout Plan Preview'
+                  : 'Diet Plan Preview'}
+              </h3>
+
+              <p className="text-sm text-muted-foreground">
+                {regenerate
+                  ? 'Regenerating...'
+                  : type === 'workout'
+                  ? `${Object.keys(workoutDays).length} workout days`
+                  : `${Object.keys(mealPlans).length} diet days`}
               </p>
             </div>
           </div>
+
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="p-2 hover:bg-muted rounded-lg transition-smooth focus:outline-none focus:ring-3 focus:ring-primary"
-            aria-expanded={isExpanded}
+            onClick={() => setIsExpanded(v => !v)}
+            className="p-2 hover:bg-muted rounded-lg"
           >
             <Icon
               name={isExpanded ? 'ChevronUpIcon' : 'ChevronDownIcon'}
               variant="outline"
               size={24}
-              className="text-muted-foreground"
             />
           </button>
         </div>
       </div>
 
+      {/* BODY */}
       {isExpanded && (
         <div className="p-6 space-y-4">
-          {type === 'workout' && workoutDays && (
-            <div className="space-y-3">
-              {workoutDays.slice(0, 3).map((day, index) => (
-                <div key={index} className="p-4 bg-muted/50 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-medium text-foreground">{day.day}</h4>
-                    <span className="text-caption text-muted-foreground text-sm">
-                      {day.duration}
-                    </span>
-                  </div>
-                  <ul className="space-y-1">
-                    {day.exercises.map((exercise, idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-center gap-2 text-caption text-muted-foreground text-sm"
-                      >
-                        <Icon
-                          name="CheckCircleIcon"
-                          variant="solid"
-                          size={16}
-                          className="text-primary"
-                        />
-                        {exercise}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+          {regenerate ? (
+            <div className="p-4 bg-muted/50 rounded-lg text-center">
+              <h4 className="font-medium">🤖 AI is regenerating your plan...</h4>
             </div>
-          )}
+          ) : (
+            <>
+              {/* WORKOUT PLAN */}
+              {type === 'workout' && (
+                <div className="space-y-3">
+                  {Object.entries(workoutDays).map(([dayKey, day]) => {
+                    const exercises =
+                      day.main_workout || day.exercises || [];
 
-          {type === 'diet' && mealPlans && (
-            <div className="space-y-3">
-              {mealPlans.map((meal, index) => (
-                <div key={index} className="p-4 bg-muted/50 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-medium text-foreground">{meal.meal}</h4>
-                    <span className="text-caption text-primary text-sm font-medium">
-                      {meal.calories}
-                    </span>
-                  </div>
-                  <ul className="space-y-1">
-                    {meal.items.map((item, idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-center gap-2 text-caption text-muted-foreground text-sm"
-                      >
-                        <Icon
-                          name="CheckCircleIcon"
-                          variant="solid"
-                          size={16}
-                          className="text-secondary"
-                        />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
+                    const isRestDay =
+                      day.workoutName === 'Rest' ||
+                      day.focus === 'Rest' ||
+                      exercises.length === 0;
+
+                    return (
+                      <div key={dayKey} className="p-4 bg-muted/50 rounded-lg">
+                        <div className="flex justify-between mb-2">
+                          <h4 className="font-medium capitalize">{dayKey}</h4>
+                          <span className="text-sm text-muted-foreground">
+                            {day.workoutName || day.focus}
+                          </span>
+                        </div>
+
+                        {isRestDay ? (
+                          <p className="text-sm text-muted-foreground">
+                            Rest & recovery day
+                          </p>
+                        ) : (
+                          <ul className="space-y-1">
+                            {exercises.map((ex, idx) => (
+                              <li
+                                key={idx}
+                                className="flex items-center gap-2 text-sm text-muted-foreground"
+                              >
+                                <Icon
+                                  name="CheckCircleIcon"
+                                  variant="solid"
+                                  size={16}
+                                  className="text-primary"
+                                />
+                                <span>
+                                  {ex.name || ex.exercise}
+                                  {ex.sets && ` • ${ex.sets} sets`}
+                                  {ex.reps && ` × ${ex.reps} reps`}
+                                  {ex.restTime && ` • Rest ${ex.restTime}`}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
-              ))}
-            </div>
-          )}
+              )}
 
-          <div className="flex gap-3 pt-4 border-t border-border">
-            <button
-              onClick={onRegenerate}
-              className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-muted hover:bg-muted/80 text-foreground rounded-lg transition-smooth focus:outline-none focus:ring-3 focus:ring-primary"
-            >
-              <Icon name="ArrowPathIcon" variant="outline" size={20} />
-              <span className="font-medium">Regenerate</span>
-            </button>
-            <button
-              onClick={onConfirm}
-              className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-white rounded-lg transition-smooth focus:outline-none focus:ring-3 focus:ring-primary shadow-warm-md"
-            >
-              <Icon name="CheckIcon" variant="solid" size={20} />
-              <span className="font-medium">Confirm Plan</span>
-            </button>
-          </div>
+              {/* DIET PLAN */}
+              {type === 'diet' && (
+                <div className="space-y-4">
+                  {Object.entries(mealPlans).map(([day, meals]) => (
+                    <div key={day} className="p-4 bg-muted/50 rounded-lg">
+                      <h4 className="font-semibold capitalize mb-2">{day}</h4>
+                      {Object.entries(meals).map(([mealName, meal]) => (
+                        <div
+                          key={mealName}
+                          className="flex justify-between text-sm"
+                        >
+                          <span className="font-medium">{mealName}</span>
+                          <span className="text-muted-foreground">
+                            {meal.name}
+                          </span>
+                          <span className="text-primary">
+                            {meal.calories} kcal
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* ACTIONS */}
+              <div className="flex gap-3 pt-4 border-t">
+                <button
+                  onClick={handleRegenerate}
+                  disabled={regenerate}
+                  className="flex-1 flex justify-center gap-2 px-6 py-3 bg-muted rounded-lg"
+                >
+                  <Icon name="ArrowPathIcon" size={20} />
+                  Regenerate
+                </button>
+
+                <button
+                  onClick={onConfirm}
+                  className="flex-1 flex justify-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-lg"
+                >
+                  <Icon name="CheckIcon" size={20} />
+                  Confirm Plan
+                </button>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

@@ -1,7 +1,7 @@
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import { getUserFromCookie } from "@/lib/auth";
-
+ 
 export default async function handler(req, res) {
   try {
     if (req.method !== "GET" && req.method !== "PUT") {

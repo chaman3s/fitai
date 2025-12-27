@@ -9,8 +9,8 @@ import PlanPreviewCard from '@/components/PlanPreview';
 import ErrorMessage from '@/components/ErrorMessage';
 import Icon from '@/components/Icon';
 import { useProfile } from "@/contexts/profileContext";
-
-
+import datajson from '@/assets/data.json'
+console.log("data:",datajson)
 const workoutDurationOptions = [
   {
     id: 'duration-1',
@@ -180,58 +180,9 @@ const motivationalTips = [
   "Your fitness journey is unique. Don't compare your chapter 1 to someone else's chapter 20."
 ];
 
-const mockWorkoutDays = [
-  {
-    day: 'Monday - Chest & Triceps',
-    exercises: [
-      'Bench Press - 4 sets x 10 reps',
-      'Incline Dumbbell Press - 3 sets x 12 reps',
-      'Tricep Dips - 3 sets x 15 reps'
-    ],
-    duration: '45 minutes'
-  },
-  {
-    day: 'Tuesday - Back & Biceps',
-    exercises: [
-      'Pull-ups - 4 sets x 8 reps',
-      'Barbell Rows - 4 sets x 10 reps',
-      'Bicep Curls - 3 sets x 12 reps'
-    ],
-    duration: '45 minutes'
-  },
-  {
-    day: 'Wednesday - Legs & Core',
-    exercises: [
-      'Squats - 4 sets x 12 reps',
-      'Lunges - 3 sets x 10 reps each leg',
-      'Plank - 3 sets x 60 seconds'
-    ],
-    duration: '50 minutes'
-  }
-];
 
-const mockMealPlans = [
-  {
-    meal: 'Breakfast',
-    items: ['Oatmeal with berries and almonds', 'Greek yogurt', 'Green tea'],
-    calories: '450 kcal'
-  },
-  {
-    meal: 'Lunch',
-    items: ['Grilled chicken salad with quinoa', 'Mixed vegetables', 'Olive oil dressing'],
-    calories: '550 kcal'
-  },
-  {
-    meal: 'Dinner',
-    items: ['Baked salmon with sweet potato', 'Steamed broccoli', 'Brown rice'],
-    calories: '600 kcal'
-  },
-  {
-    meal: 'Snacks',
-    items: ['Apple with peanut butter', 'Protein shake', 'Mixed nuts'],
-    calories: '300 kcal'
-  }
-];
+
+
 
 export default function GenerationPlan() {
   const { user } = useProfile();
@@ -248,6 +199,8 @@ export default function GenerationPlan() {
   const [showPreview, setShowPreview] = useState(false);
   const [workoutPlan, setWorkoutPlan] = useState(null);
   const [mealPlan, setMealPlan] = useState(null);
+  const [obj,setObj ]= useState({});
+  
   useEffect(() => {
     setIsHydrated(true);
   }, []);
@@ -300,32 +253,48 @@ export default function GenerationPlan() {
     };
   };
 
-const handleGeneratePlans = async () => {
+const handleGeneratePlans = async (reqFor) => {
   setIsGenerating(true);
-
-  const res = await fetch("/api/planGeneration", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      userId: user._id,
+  let reqObj=  {userId: user._id,
       profile: user,
       workoutDuration,
       mealComplexity,
       focusArea,
       advancedSettings,
-    }),
+      reqFor,}
+    if(reqFor=="workout"){
+      reqObj["oldObject"] = { plan:obj.plan}
+    }
+    else if(reqFor=="diet"){
+      reqObj["oldObject"] = { plan:obj.plan}
+    }
+  const res = await fetch("/api/planGeneration", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(reqObj),
   });
-
   const data = await res.json();
-
   if (!data.success) {
     setGenerationError("Plan generation failed");
     setIsGenerating(false);
     return;
   }
-
-  setWorkoutPlan(data.workoutPlan);
-  setMealPlan(data.dietPlan);
+  setObj(data);
+  if(data.plan.fitnessPlan?.weeklyWorkoutSchedule){
+    let dt= data.plan.fitnessPlan;
+    setWorkoutPlan(dt.weeklyWorkoutSchedule);
+    setMealPlan(dt.dailyDietPlan);
+  }
+  else if (data.plan.FitnessPlan?.weekly_workout_schedule){
+   let dt= data.plan.FitnessPlan;
+   console.log("ok")
+    setWorkoutPlan(dt.weekly_workout_schedule);
+    setMealPlan(dt.daily_diet_plan);
+  }
+  console.log("work:",workoutPlan)
+  
+  
+ 
   setShowPreview(true);
   setIsGenerating(false);
 };
@@ -342,13 +311,11 @@ const handleGeneratePlans = async () => {
   };
 
   const handleConfirmPlan = () => {
-    router.push('/dashboard');
+    
+    router.push('/');
   };
 
-  const handleRegeneratePlan = () => {
-    setShowPreview(false);
-    simulateGeneration();
-  };
+
 
   if (!isHydrated) {
     return (
@@ -399,7 +366,7 @@ const handleGeneratePlans = async () => {
 
             <div className="flex justify-center pt-4">
               <button
-                onClick={handleGeneratePlans}
+                onClick={() => handleGeneratePlans("all")}
                 className="flex items-center gap-3 px-12 py-4 bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-white rounded-xl transition-smooth focus:outline-none focus:ring-3 focus:ring-primary shadow-warm-lg text-lg font-semibold"
               >
                 <Icon name="SparklesIcon" variant="solid" size={24} />
@@ -408,7 +375,6 @@ const handleGeneratePlans = async () => {
             </div>
           </div>
         )}
-
         {isGenerating && (
           <GenerationProgress
             stages={currentStages}
@@ -430,14 +396,14 @@ const handleGeneratePlans = async () => {
               type="workout"
               workoutDays={ workoutPlan}
               onConfirm={handleConfirmPlan}
-              onRegenerate={handleRegeneratePlan}
+              onRegenerate={() => handleGeneratePlans("workout")}
             />
 
             <PlanPreviewCard
               type="diet"
               mealPlans={ mealPlan}
               onConfirm={handleConfirmPlan}
-              onRegenerate={handleRegeneratePlan}
+              onRegenerate={() => handleGeneratePlans("diet")}
             />
           </div>
         )}
