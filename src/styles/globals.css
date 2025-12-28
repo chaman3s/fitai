@@ -105,3 +105,10 @@ body {
   line-height: 1.65;
   transition: background-color 0.25s ease, color 0.25s ease;
 }
+nav{
+  background-color: var(--background);
+  z-index: 1000;
+}
+select{
+  background-color: var(--background);;
+}

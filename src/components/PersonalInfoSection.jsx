@@ -123,7 +123,7 @@ export default function PersonalInfoSection({
               onChange={(e) =>
                 setEditedInfo({ ...editedInfo, gender: e.target.value })
               }
-              className="w-full px-4 py-3 border rounded-lg"
+              className="w-full px-4 py-3 border rounded-lg bg-[lab(1.9% .27 -5.4)]"
             >
               <option value="">Select</option>
               <option>Male</option>

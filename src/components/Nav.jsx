@@ -58,7 +58,7 @@ export default function Nav() {
     <>
       {/* Desktop Navbar */}
       <nav
-        className="hidden md:flex fixed top-0 left-0 right-0 bg-card shadow-warm-md z-navigation"
+        className="hidden md:flex fixed top-0 left-0 right-0 bg-card shadow-warm-md z-navigation NavBar"
         aria-label="Primary navigation"
       >
         <div className="w-full mx-auto px-4">

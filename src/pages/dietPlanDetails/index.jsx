@@ -4,7 +4,6 @@ import { useState, useMemo } from 'react';
 import MealCard from '@/components/MealCard';
 import DailyNutritionSummary from '@/components/DailyNutritionSummary';
 import ShoppingList from '@/components/ShoppingList';
-import DietaryRestrictions from '@/components/DietaryRestrictions';
 import MealTimeline from '@/components/MealTimeLine';
 import HydrationTracker from '@/components/HydrationTracker';
 import Icon from '@/components/Icon';
@@ -15,8 +14,56 @@ const DAYS = [
 ];
 
 export default function DietPlan() {
-  const { mealPlan } = useProfile(); // <-- real data
+  const { mealPlan } = useProfile();
   const [selectedDay, setSelectedDay] = useState("Monday");
+
+  const mealsForDay = useMemo(() => {
+    if (!mealPlan) return [];
+    const dayMeals = mealPlan[selectedDay];
+    if (!dayMeals) return [];
+    return Object.entries(dayMeals).map(([mealType, meal]) => ({
+      id: `${selectedDay}-${mealType}`,
+      mealType,
+      ...meal,
+    }));
+  }, [mealPlan, selectedDay]);
+
+  const totalNutrition = useMemo(() => {
+    return mealsForDay.reduce(
+      (acc, meal) => ({
+        calories: acc.calories + Number(meal.calories || 0),
+        protein: acc.protein + Number(meal.protein || 0),
+        carbs: acc.carbs + Number(meal.carbohydrates || 0),
+        fats: acc.fats + Number(meal.fat || 0),
+        fiber: acc.fiber,
+      }),
+      { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 }
+    );
+  }, [mealsForDay]);
+
+  const mealTimeline = useMemo(() => {
+    return mealsForDay.map((meal, index) => ({
+      id: index,
+      mealType: meal.mealType,
+      time:
+        meal.mealType === "breakfast"
+          ? "7:00 AM"
+          : meal.mealType === "lunch"
+          ? "1:00 PM"
+          : meal.mealType === "snack"
+          ? "5:00 PM"
+          : "8:00 PM",
+      calories: meal.calories,
+      icon:
+        meal.mealType === "breakfast"
+          ? "SunIcon"
+          : meal.mealType === "lunch"
+          ? "FireIcon"
+          : meal.mealType === "snack"
+          ? "CakeIcon"
+          : "MoonIcon",
+    }));
+  }, [mealsForDay]);
 
   if (!mealPlan) {
     return (
@@ -26,67 +73,11 @@ export default function DietPlan() {
     );
   }
 
-  // ---------------------------
-  // 🔹 Convert object → array
-  // ---------------------------
-  const mealsForDay = useMemo(() => {
-    const dayMeals = mealPlan[selectedDay];
-    if (!dayMeals) return [];
-
-    return Object.entries(dayMeals).map(([mealType, meal]) => ({
-      id: `${selectedDay}-${mealType}`,
-      mealType,
-      ...meal,
-    }));
-  }, [mealPlan, selectedDay]);
-
-  // ---------------------------
-  // 🔹 Nutrition totals
-  // ---------------------------
-  const totalNutrition = mealsForDay.reduce(
-    (acc, meal) => ({
-      calories: acc.calories + Number(meal.calories || 0),
-      protein: acc.protein + Number(meal.protein || 0),
-      carbs: acc.carbs + Number(meal.carbohydrates || 0),
-      fats: acc.fats + Number(meal.fat || 0),
-      fiber: acc.fiber + 0, // fiber not provided
-    }),
-    { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 }
-  );
-
-  // ---------------------------
-  // 🔹 Timeline
-  // ---------------------------
-  const mealTimeline = mealsForDay.map((meal, index) => ({
-    id: index,
-    mealType: meal.mealType,
-    time:
-      meal.mealType === "breakfast"
-        ? "7:00 AM"
-        : meal.mealType === "lunch"
-        ? "1:00 PM"
-        : meal.mealType === "snack"
-        ? "5:00 PM"
-        : "8:00 PM",
-    calories: meal.calories,
-    icon:
-      meal.mealType === "breakfast"
-        ? "SunIcon"
-        : meal.mealType === "lunch"
-        ? "FireIcon"
-        : meal.mealType === "snack"
-        ? "CakeIcon"
-        : "MoonIcon",
-  }));
-
   return (
     <div className="min-h-screen bg-background pb-20">
       <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        {/* LEFT */}
         <div className="lg:col-span-2 space-y-6">
-
-          {/* DAY SELECTOR */}
           <div className="flex gap-2 overflow-x-auto">
             {DAYS.map((day) => (
               <button
@@ -103,7 +94,6 @@ export default function DietPlan() {
             ))}
           </div>
 
-          {/* SUMMARY */}
           <DailyNutritionSummary
             totalCalories={totalNutrition.calories}
             totalProtein={totalNutrition.protein}
@@ -116,7 +106,6 @@ export default function DietPlan() {
             targetFats={73}
           />
 
-          {/* MEALS */}
           {mealsForDay.map((meal) => (
             <MealCard
               key={meal.id}
@@ -135,7 +124,6 @@ export default function DietPlan() {
           ))}
         </div>
 
-        {/* RIGHT */}
         <div className="space-y-6">
           <MealTimeline timeline={mealTimeline} />
           <HydrationTracker targetGlasses={8} />
@@ -143,7 +131,6 @@ export default function DietPlan() {
         </div>
       </div>
 
-      {/* EXPORT BUTTON */}
       <button className="fixed bottom-6 right-6 w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-xl">
         <Icon name="ArrowDownTrayIcon" variant="solid" size={24} />
       </button>
