@@ -29,10 +29,10 @@ export default function MealCard({ meal, onPlayAudio, isPlaying }) {
   };
 
   return (
-    <div className="bg-card rounded-xl shadow-warm-md overflow-hidden transition-smooth">
+    <div className="bg-card rounded-xl shadow-warm-md overflow-hidden transition-smooth h-[16%] -mb-[13%]">
       
       {/* HEADER */}
-      <div className="relative h-40 overflow-hidden bg-muted">
+      <div className="relative h-[17%] overflow-hidden bg-muted">
         {meal.image ? (
           <AppImage
             src={meal.image}
@@ -41,11 +41,11 @@ export default function MealCard({ meal, onPlayAudio, isPlaying }) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-            <Icon name="PhotoIcon" size={32} />
+            {/* <Icon name="PhotoIcon" size={32} /> */}
           </div>
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        {/* <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" /> */}
         <div className="absolute bottom-0 p-4">
           <h3 className="text-lg font-bold text-white">{meal.name}</h3>
         </div>
@@ -100,20 +100,20 @@ export default function MealCard({ meal, onPlayAudio, isPlaying }) {
 
         {/* ACTIONS */}
         <div className="flex gap-2 mt-4">
-          <button
+          {/* <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="flex-1 bg-primary text-white py-2 rounded-lg text-sm"
           >
             {isExpanded ? 'Hide Details' : 'View Details'}
-          </button>
+          </button> */}
 
-          <button
+          {/* <button
             onClick={handlePlayAudio}
             disabled={isPlaying}
             className="px-4 py-2 bg-secondary text-white rounded-lg"
-          >
-            <Icon name="SpeakerWaveIcon" size={18} />
-          </button>
+          > */}
+            {/* <Icon name="SpeakerWaveIcon" size={18} />
+          </button> */}
         </div>
       </div>
     </div>

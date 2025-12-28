@@ -8,7 +8,7 @@ const quickActions = [
     title: 'Generate New Plan',
     description: 'Create personalized AI fitness plan',
     icon: 'SparklesIcon',
-    href: '/plan-generation',
+    href: '/planGeneration',
     color: 'from-primary to-secondary',
   },
   {
@@ -16,7 +16,7 @@ const quickActions = [
     title: 'View Workout Plan',
     description: 'Access detailed exercise routines',
     icon: 'FireIcon',
-    href: '/workout-plan-details',
+    href: '/workoutPlanDetails',
     color: 'from-accent to-primary',
   },
   {
@@ -24,7 +24,7 @@ const quickActions = [
     title: 'View Diet Plan',
     description: 'Check your nutrition schedule',
     icon: 'HeartIcon',
-    href: '/diet-plan-details',
+    href: '/dietPlanDetails',
     color: 'from-secondary to-accent',
   },
   {
@@ -32,7 +32,7 @@ const quickActions = [
     title: 'Update Profile',
     description: 'Modify your fitness preferences',
     icon: 'UserCircleIcon',
-    href: '/user-profile-settings',
+    href: '/userProfileSettings',
     color: 'from-primary to-accent',
   },
 ];

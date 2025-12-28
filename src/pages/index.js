@@ -136,8 +136,8 @@ export default function Home() {
           <QuickActions />
 
           {/* 🔹 Plans */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <PlanCard
+          {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* <PlanCard
               type="workout"
               title="Workout Plan"
               description="Your personalized exercise routine."
@@ -161,21 +161,21 @@ export default function Home() {
               onPlayAudio={() => handlePlayAudio('Diet Plan')}
               onExportPDF={() => handleExportPDF('Diet Plan')}
               onRegenerate={() => handleRegenerate('Diet Plan')}
-            />
-          </div>
+          //   /> */}
+          {/* // </div> */}
 
           {/* 🔹 Goals */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <GoalProgress goalType="Weight" currentValue={user?.weight} targetValue={15} unit="kg" icon="⚖️" />
             <GoalProgress goalType="Muscle Gain"  currentValue={(user?.currentLeanMass - user?.oldLeanMass).toFixed(2)} targetValue={5} unit="kg" icon="💪" />
             <GoalProgress goalType="Body Fat" currentValue={user?.bodyFat} targetValue={8} unit="%" icon="📉" />
-          </div>
+          </div> */}
 
           {/* 🔹 API DATA */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <ActivitySummary activities={activities} />
             <UpcomingWorkouts workouts={upcomingWorkouts} />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

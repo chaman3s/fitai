@@ -7,7 +7,12 @@ import Icon from '@/components/Icon';
 import ThemeToggle from '@/components/Theme';
 
 const navigationItems = [
- 
+ {
+    label: 'Dashboard',
+    path: '/',
+    icon: 'HomeIcon',
+    tooltip: 'View your fitness overview',
+  },
   {
     label: 'Workout Plans',
     path: '/workoutPlanDetails',
@@ -68,7 +73,7 @@ export default function Nav() {
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-heading font-bold text-foreground leading-none">
-                  FitGenius AI
+                  FitAI
                 </span>
                 <span className="text-xs text-caption text-muted-foreground mt-0.5">
                   Your Fitness Companion
