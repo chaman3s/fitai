@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import Icon from '@/components/ui/AppIcon';
+import Icon from '@/components/Icon';
 
 const NotFound = () => {
     const router = useRouter();
