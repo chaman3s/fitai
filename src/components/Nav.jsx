@@ -39,7 +39,7 @@ const navigationItems = [
   },
 ];
 
-export default function Nav() {
+export default function Nav({log}) {
   const pathname = usePathname();
   const [isMobile, setIsMobile] = useState(false);
 
@@ -53,7 +53,6 @@ export default function Nav() {
 
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
-
   return (
     <>
       {/* Desktop Navbar */}
@@ -80,8 +79,9 @@ export default function Nav() {
                 </span>
               </div>
             </Link>
-
+           
             <div className="flex items-center gap-2">
+               {log&&(<>
               {navigationItems.map((item) => {
                 const isActive = pathname === item.path;
 
@@ -112,11 +112,12 @@ export default function Nav() {
                   </Link>
                 );
               })}
-
+               </>)}
               <div className="ml-2 pl-2 border-l border-border hidden">
                 <ThemeToggle />
               </div>
             </div>
+           
           </div>
         </div>
       </nav>
@@ -126,6 +127,7 @@ export default function Nav() {
         className="md:hidden fixed bottom-0 left-0 right-0 bg-card shadow-warm-lg z-navigation"
         aria-label="Primary navigation"
       >
+        {log&&(
         <div className="grid grid-cols-5 gap-1 px-2 py-2">
           {navigationItems.map((item) => {
             const isActive = pathname === item.path;
@@ -159,6 +161,7 @@ export default function Nav() {
             );
           })}
         </div>
+        )}
       </nav>
       <div className="hidden md:block h-20" aria-hidden="true" />
       <div className="md:hidden h-16" aria-hidden="true" />

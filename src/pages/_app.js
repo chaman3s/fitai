@@ -11,7 +11,7 @@ export default function App({ Component, pageProps }) {
 
   return (
     <AuthProvider>
-      <Nav />
+    <Nav   log={!isPublic}/>
 
       <main style={{ padding: "20px" }}>
         {isPublic ? (
