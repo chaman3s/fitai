@@ -214,43 +214,6 @@ export default function GenerationPlan() {
     router.push('/userProfileSettings');
   };
 
-  const simulateGeneration = () => {
-    setIsGenerating(true);
-    setGenerationError(null);
-    setShowPreview(false);
-
-    let currentStageIndex = 0;
-
-    const stageInterval = setInterval(() => {
-      if (currentStageIndex < generationStages.length) {
-        setCurrentStages(prev =>
-          prev.map((stage, index) => ({
-            ...stage,
-            status:
-              index < currentStageIndex
-                ? 'completed'
-                : index === currentStageIndex
-                ? 'active'
-                : 'pending'
-          }))
-        );
-        currentStageIndex++;
-      } else {
-        clearInterval(stageInterval);
-        setIsGenerating(false);
-        setShowPreview(true);
-      }
-    }, 2000);
-
-    const tipInterval = setInterval(() => {
-      setCurrentTipIndex(prev => (prev + 1) % motivationalTips.length);
-    }, 5000);
-
-    return () => {
-      clearInterval(stageInterval);
-      clearInterval(tipInterval);
-    };
-  };
 const handleGeneratePlans = async (reqFor) => {
   try {
     setIsGenerating(true);
@@ -306,14 +269,6 @@ const handleGeneratePlans = async (reqFor) => {
     setIsGenerating(false);
   }
 };
-
-
-
-  const handleRetry = () => {
-    setGenerationError(null);
-    setCurrentStages(generationStages.map(stage => ({ ...stage, status: 'pending' })));
-    simulateGeneration();
-  };
 
   const handleCancelError = () => {
     setGenerationError(null);
@@ -402,7 +357,7 @@ const handleGeneratePlans = async (reqFor) => {
         {generationError && (
           <ErrorMessage
             message={generationError}
-            onRetry={handleRetry}
+            onRetry={()=>handleGeneratePlans("all")}
             onCancel={handleCancelError}
           />
         )}
