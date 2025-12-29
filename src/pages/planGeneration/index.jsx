@@ -10,6 +10,9 @@ import ErrorMessage from '@/components/ErrorMessage';
 import Icon from '@/components/Icon';
 import { useProfile } from "@/contexts/profileContext";
 import datajson from '@/assets/data.json'
+import TopLineLoader from '@/components/TopLineLoader';
+import { set } from 'mongoose';
+
 console.log("data:",datajson)
 const workoutDurationOptions = [
   {
@@ -180,10 +183,6 @@ const motivationalTips = [
   "Your fitness journey is unique. Don't compare your chapter 1 to someone else's chapter 20."
 ];
 
-
-
-
-
 export default function GenerationPlan() {
   const { user } = useProfile();
   const router = useRouter();
@@ -252,52 +251,62 @@ export default function GenerationPlan() {
       clearInterval(tipInterval);
     };
   };
-
 const handleGeneratePlans = async (reqFor) => {
-  setIsGenerating(true);
-  let reqObj=  {userId: user._id,
+  try {
+    setIsGenerating(true);
+    setGenerationError(null);
+    setShowPreview(false);
+
+    let reqObj = {
+      userId: user._id,
       profile: user,
       workoutDuration,
       mealComplexity,
       focusArea,
       advancedSettings,
-      reqFor,}
-    if(reqFor=="workout"){
-      reqObj["oldObject"] = { plan:obj.plan}
+      reqFor,
+    };
+
+    if (reqFor === "workout" || reqFor === "diet") {
+      reqObj.oldObject = { plan: obj.plan };
     }
-    else if(reqFor=="diet"){
-      reqObj["oldObject"] = { plan:obj.plan}
+
+    const res = await fetch("/api/planGeneration", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(reqObj),
+    });
+    // let data = datajson;
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error("Plan generation failed");
     }
-  const res = await fetch("/api/planGeneration", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(reqObj),
-  });
-  const data = await res.json();
-  if (!data.success) {
-    setGenerationError("Plan generation failed");
+
+    setObj(data);
+
+    const plan =
+      data.plan.fitnessPlan || data.plan.FitnessPlan;
+
+    if (plan) {
+      setWorkoutPlan(
+        plan.weeklyWorkoutSchedule ||
+        plan.weekly_workout_schedule
+      );
+      setMealPlan(
+        plan.dailyDietPlan ||
+        plan.daily_diet_plan
+      );
+    }
+
+    setShowPreview(true);
+  } catch (err) {
+    setGenerationError(err.message);
+  } finally {
     setIsGenerating(false);
-    return;
   }
-  setObj(data);
-  if(data.plan.fitnessPlan?.weeklyWorkoutSchedule){
-    let dt= data.plan.fitnessPlan;
-    setWorkoutPlan(dt.weeklyWorkoutSchedule);
-    setMealPlan(dt.dailyDietPlan);
-  }
-  else if (data.plan.FitnessPlan?.weekly_workout_schedule){
-   let dt= data.plan.FitnessPlan;
-   console.log("ok")
-    setWorkoutPlan(dt.weekly_workout_schedule);
-    setMealPlan(dt.daily_diet_plan);
-  }
-  console.log("work:",workoutPlan)
-  
-  
- 
-  setShowPreview(true);
-  setIsGenerating(false);
 };
+
 
 
   const handleRetry = () => {
@@ -326,11 +335,19 @@ const handleGeneratePlans = async (reqFor) => {
   }
 
   return (
+      <>
+    <TopLineLoader loading={isGenerating} />
     <div className="min-h-screen bg-background pb-24 md:pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {!isGenerating && !generationError && !showPreview && (
           <div className="space-y-6">
-            <ProfileSummaryCard profile={user} onEdit={handleEditProfile} />
+
+            {user && (
+  <ProfileSummaryCard
+    profile={user}
+    onEdit={handleEditProfile}
+  />
+)}
 
             <CustomizationCard
               title="Workout Duration"
@@ -409,5 +426,6 @@ const handleGeneratePlans = async (reqFor) => {
         )}
       </div>
     </div>
+  </>
   );
 }

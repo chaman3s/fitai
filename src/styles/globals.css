@@ -112,3 +112,12 @@ nav{
 select{
   background-color: var(--background);;
 }
+@keyframes loader {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(0%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-loader {
+  animation: loader 1.1s linear infinite;
+}

@@ -30,7 +30,7 @@ export default function ProfileSummaryCard({ profile, onEdit }) {
           </div>
           <div>
             <p className="text-caption text-muted-foreground text-sm">Name</p>
-            <p className="text-foreground font-medium">{profile.name || 'N/A'}</p>
+            <p className="text-foreground font-medium">{profile?.name || 'N/A'}</p>
           </div>
         </div>
 

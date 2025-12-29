@@ -81,7 +81,6 @@ export default function WorkoutPlan() {
     <div className="min-h-screen bg-background pb-20">
       <div className="max-w-7xl mx-auto px-4 py-8">
 
-        {/* HEADER */}
         <div className="mb-8">
           <h1 className="text-3xl font-heading font-bold">
             Your Workout Plan
@@ -89,8 +88,6 @@ export default function WorkoutPlan() {
         </div>
 
         <MotivationalQuote />
-
-        {/* WORKOUT DAYS */}
         <div className="space-y-4">
           {Object.entries(workoutPlan).map(([key, value]) => {
             const dayNumber = getDayNumber(key.toLowerCase());
